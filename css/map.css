@@ -1,0 +1,884 @@
+/* 
+Usefull links for css stylesheet: 
+
+* Colors:
+http://www.onextrapixel.com/2013/10/25/40-stunning-website-designs-with-great-color-schemes/
+http://www.colourlovers.com/
+http://design-seeds.com/
+
+* CSS generators
+http://www.megaptery.com/2012/05/21-outils-generateurs-css-developpeurs-web.html
+
+
+*/
+
+/**** basics HTML tags****/
+html, body, div, applet, object, iframe, h1, h2, h3, h4, h5, h6, p,
+	blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn,
+	em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var,
+	b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend,
+	table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas,
+	details, embed, figure, figcaption, footer, header, hgroup, menu, nav,
+	output, ruby, section, summary, time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	outline: 0;
+	color: #3B485B;
+	text-align: justify;
+	font-family: "Lucida Grande", verdana, Tahoma, arial, sans-serif;
+	font-size: 12px;
+}
+
+h1 {
+	font-size: 16px;
+	float: left;
+	margin: 5px;
+	color: #fff;
+}
+
+/* Page is composed of topnav, main and moreinfo*/
+#page {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+}
+
+/* Top navigation space : composed of logo+ city + buttons*/
+#topnav {
+	position: absolute;
+	width: 100%;
+	min-width: 1240px;
+	left: 0;
+	top: 0px;
+	height: 60px;
+	padding: 0;
+	background: #fff;
+	z-index: 20;
+	display: block;
+	/*background-image:-webkit-gradient(linear,0% 100%,0% 0,color-stop(0.0,#fff),color-stop(0.5,#4D505B));
+	background-image:-moz-linear-gradient(center bottom,#fff 0,#4D505B 50%);*/
+	vertical-align: middle;
+}
+
+#topnav a {
+	text-decoration: none;
+}
+
+/* absolute positions are relative to the container */
+#logo {
+	position: absolute;
+	width: 160px;
+	height: 60px;
+	line-height: 60px;
+	top: 0px;
+	left: 0px;
+	background: url(../images/logo.png) no-repeat;
+	background-size: auto 60px;
+	padding: 0;
+	margin: 0;
+	text-indent: 100px;
+	display: inline-block;
+	color: #fff;
+}
+
+#city {
+	position: absolute;
+	width: 200px;
+	height: 60px;
+	line-height: 60px;
+	top: 0px;
+	left: 170px;
+	font-size: 16px;
+	float: left;
+	margin: 0px;
+	color: #FE5300;
+	display: inline-block;
+	vertical-align: middle;
+}
+.toulouse {
+	background: url(../images/toulouse.jpeg) no-repeat;
+	background-size: auto 60px;
+	padding: 0;
+	margin: 0;
+	text-indent: 100px;
+	display: inline-block;
+	color: #fff;
+}
+
+#buttons {
+	position: relative;
+	height: 60px;
+	top: 0px;
+	width: 60%;
+	min-width: 880px;
+	margin-right:15px;
+	display:inline-block;
+	float:right;
+}
+
+
+/* Main contains myMap and control */
+#main {
+	position: absolute;
+	left: 0;
+	top: 60px;
+	width: 100%;
+	min-width:1200px;
+}
+
+html, body, #main {
+	height: 100%;
+}
+
+#myMap {
+	width: 78%;
+	height: 90%; /*800px;*/
+	/*	min-height:800px;*/
+	/*	min-width:960px;*/
+	float: left;
+
+}
+
+/* Control contains station + sliders +day+ controladv (controlBoxActiveRoutes + morecontroladv (activeRoutes + animationVelocity)) */
+#control {
+	width: 22%;
+	height: 100%;
+	min-width: 240px;
+	float: right;
+	/*border:1px solid #4D505B;*/
+}
+
+#station {
+	height: 50 px;
+	min-width: 240px;
+	position: absolute;
+	top: 10px;
+}
+
+#sliders {
+	height: 250px;
+	margin-top: 20px;
+	min-width: 240px;
+	position: absolute;
+	top: 55px;
+	text-align: center;
+}
+
+
+#sliders label {
+	display: block;
+	margin: 0;
+	text-align: center;
+}
+
+#timeslider {
+	width: 50%;
+	float: left;
+	text-indent: 0px;
+}
+
+#timeslider .ui-widget-header {
+	background: url(../images/degrade.png);
+	background-size: 100% 100%;
+
+}
+
+#timeslider .ui-slider-handle {
+	background-color: #FF0000;
+	background-image: none;
+}
+
+#hourslider {
+	width: 50%;
+	float: right;
+	text-indent: 0px;
+}
+
+#hourslider .ui-widget-header {
+	background: #7fb541;
+	/*background:url(../images/journuit.jpg) no-repeat left bottom;*/
+}
+
+
+
+#day {
+	margin-top: 20px;
+	height: 50 px;
+	min-width: 240px;
+	text-indent: 10px;
+	position: absolute;
+	top: 300px;
+	color: #FF702A;
+	font-weight: bold;
+}
+
+
+
+#controlboxActiveRoutes {
+	text-align: left;
+	position: absolute;
+	top: 365px;
+	color: #FF702A;
+	font-weight: bold;
+	text-indent: 10px;
+}
+
+#morecontroladv {
+	position: absolute;
+	top: 520px;
+	text-indent: 10px;
+	font-weight: bold;
+}
+
+#routes {
+	height: 120px;
+	margin-top: 20px;
+	min-width: 240px;
+	color: gray;
+}
+
+#activeRoutes {
+	/*height:370px;*/
+	margin-top: 20px;
+	min-width: 240px;
+	text-align: center;
+	text-indent: 5px;
+}
+
+
+
+#animationVelocity {
+	min-width: 240px;
+	margin-top: 20px;
+	text-align: left;
+	margin-bottom: 20px;
+}
+
+#animationVelocity label {
+	color: #FF702A;
+	font-weight: bold;
+}
+
+#animationVelocity .ui-widget-header {
+	background: #7fb541;
+}
+
+
+/*moreinfo */
+#moreinfo {
+	text-indent: 6px;
+	text-align: justify;
+	margin: 5px;
+}
+
+#moreinfo h3 {
+	color: #FF702A;
+}
+
+#moreinfo h2 {
+	color: #FF702A;
+	font-size: 16px;
+}
+
+#moreinfo li {
+	text-indent: 20px;
+	list-style-type: square;
+	list-style-position: inside;
+}
+
+
+
+
+/* buttons*/
+.awesome, .awesome:visited {
+	background: #222 url(../images/alert-overlay.png) repeat-x;
+	display: inline-block;
+	padding: 6px 6px 6px;
+	margin:10px;
+	margin-left: 7px;
+	margin-right: 7px;	
+	color: #fff;
+	text-decoration: none;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+	-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+	text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+	position: relative;
+	cursor: pointer;
+	font-size: 13px;
+	font-weight: bold;
+	line-height: 25px;
+	text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+	vertical-align: middle;
+}
+
+.awesome:hover {
+	background-color: #80628B;
+	color: #fff;
+}
+
+.awesome:active {
+	top: 1px;
+}
+
+.orange1.awesome, .orange.awesome:visited {
+	/*background-color: #Ffca00;*/
+	background-color: #FFCF1A;
+	color: #fff;
+}
+
+.orange1.awesome:hover {
+	background-color: #FFCF1A;
+	color: #fff;
+}
+
+.orange2.awesome, .orange.awesome:visited {
+	/*background-color: #ff9800; */
+	background-color: #FFB600;
+	color: #fff;
+}
+
+.orange2.awesome:hover {
+	background-color: #FFB600;
+	color: #fff;
+}
+
+.orange3.awesome, .orange.awesome:visited {
+	/*background-color: #FF6214; */
+	background-color: #FF9100;
+	color: #fff;
+}
+
+.orange3.awesome:hover {
+	background-color: #FF9100;
+	color: #fff;
+}
+
+.orange4.awesome, .orange.awesome:visited {
+	background-color: #FF7E00;
+	color: #fff;
+}
+
+.orange4.awesome:hover {
+	background-color: #FF7E00;
+	color: #fff;
+}
+
+.orange5.awesome, .orange.awesome:visited {
+	background-color: #FF5C00;
+	color: #fff;
+}
+
+.orange5.awesome:hover {
+	background-color: #FF5C00;
+	color: #fff;
+}
+
+.question {
+	background: url(../images/icons/Question.png) no-repeat;
+	background-size: 22px 22px;
+	padding: 0;
+	margin: 0;
+	text-indent: 30px;
+	display: block;
+	color: #fff;
+}
+
+.refresh {
+	background: url(../images/icons/Refresh.png) no-repeat;
+	background-size: 22px 22px;
+	padding: 0;
+	margin: 0;
+	display: block;
+}
+
+.clock {
+	background: url(../images/icons/Clock.png) no-repeat;
+	background-size: 22px 22px;
+	padding: 0;
+	margin: 0;
+	display: block;
+	text-indent: 30px;
+}
+
+.meet {
+	background: url(../images/icons/Meet.png) no-repeat;
+	background-size: 22px 22px;
+	padding: 0;
+	margin: 0;
+	text-indent: 30px;
+	display: block;
+}
+
+.video {
+	background: url(../images/icons/Video.png) no-repeat;
+	background-size: 22px 22px;
+	padding: 0;
+	margin: 0;
+	display: block;
+	text-indent: 30px;
+}
+
+.advanced {
+	background: url(../images/icons/next.png) no-repeat;
+	background-size: 22px 22px;
+	padding: 0;
+	margin: 0;
+	display: block;
+	text-indent: 30px;
+}
+
+.awesome.round {
+	-moz-border-radius: 20px;
+	-webkit-border-radius: 20px;
+}
+
+.routeCheck, .routeCheck:visited {
+	background: #222 url(../images/alert-overlay.png) repeat-x;
+	display: inline-block;
+	padding: 6px 6px 6px;
+	margin: 2px;
+	color: #fff;
+	text-decoration: none;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+	-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+	text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+	position: relative;
+	cursor: pointer;
+	font-size: 8px;
+	font-weight: bold;
+	line-height: 5px;
+	text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+	vertical-align: middle;
+	text-indent: 0px;
+}
+
+/* ON/OFF buttons, obtained thanks to  http://proto.io/freebies/onoff/*/
+.onoffswitch {
+	position: relative;
+	width: 110px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+}
+
+.onoffswitch-checkbox {
+	display: none;
+}
+
+.onoffswitch-label {
+	display: block;
+	overflow: hidden;
+	cursor: pointer;
+	border: 2px solid #999999;
+	border-radius: 20px;
+}
+
+.onoffswitch-inner {
+	width: 200%;
+	margin-left: -100%;
+	-moz-transition: margin 0.3s ease-in 0s;
+	-webkit-transition: margin 0.3s ease-in 0s;
+	-o-transition: margin 0.3s ease-in 0s;
+	transition: margin 0.3s ease-in 0s;
+}
+
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+	float: left;
+	width: 50%;
+	height: 20px;
+	padding: 0;
+	line-height: 20px;
+	font-size: 10px;
+	color: white;
+	font-family: Trebuchet, Arial, sans-serif;
+	font-weight: bold;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.onoffswitch-inner:before {
+	content: "activées";
+	text-indent: 0px;
+	padding-left: 10px;
+	background-color: #FF9100;
+	color: #FFFFFF;
+}
+
+.onoffswitch-inner:after {
+	content: "désactivées";
+	padding-right: 10px;
+	/*background-color: #FFA200; color: #999999;*/
+	background-color: #a9c5d0;
+	color: #999999;
+	text-align: right;
+}
+
+.onoffswitch-switch {
+	width: 15px;
+	margin: 7.5px;
+	background: #FFFFFF;
+	border: 2px solid #999999;
+	border-radius: 20px;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 70px;
+	-moz-transition: all 0.3s ease-in 0s;
+	-webkit-transition: all 0.3s ease-in 0s;
+	-o-transition: all 0.3s ease-in 0s;
+	transition: all 0.3s ease-in 0s;
+}
+
+.onoffswitch-checkbox:checked+.onoffswitch-label .onoffswitch-inner {
+	margin-left: 0;
+}
+
+.onoffswitch-checkbox:checked+.onoffswitch-label .onoffswitch-switch {
+	right: 0px;
+}
+
+/* For map legend */
+.info {
+	padding: 6px 8px;
+	font: 14px/16px Arial, Helvetica, sans-serif;
+	background: white;
+	background: rgba(255, 255, 255, 0.8);
+	box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+	border-radius: 5px;
+	text-indent: 0px;
+}
+
+.lineInfo {
+	padding: 6px 8px;
+	font: 14px/16px Arial, Helvetica, sans-serif;
+	background: white;
+	background: rgba(255, 255, 255, 0.8);
+	box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+	border-radius: 5px;
+	text-indent: 0px;
+	line-height: 18px;
+	color: #555;
+}
+
+.lineInfo i {
+	width: 18px;
+	height: 18px;
+	float: left;
+	margin-right: 8px;
+	opacity: 0.7;
+}
+
+.legend {
+	line-height: 18px;
+	color: #555;
+}
+
+.legend i {
+	width: 18px;
+	height: 18px;
+	float: left;
+	margin-right: 8px;
+	opacity: 0.7;
+}
+
+.timeTable {
+	font: 12px Arial, Helvetica, sans-serif;
+	height: 600px;
+	width: 600px;
+	overflow-y: auto;
+	overflow-x: auto;
+	/*overflow:hidden;*/
+	border: 1px solid #AAAAAA;
+}
+
+.timeTable b {
+	font-size: 14px Arial, Helvetica, sans-serif;
+	font-weight: bold;
+}
+
+.timeTable table {
+	border: 1px solid #000000;
+}
+
+.stopInfo_before {
+	color: #909090;
+}
+
+.stopInfo_now {
+	font-weight: bold;
+	/*color: #7E1ED0;*/
+	color: #FE5300;
+}
+
+.stopInfo_after {
+	color: black;
+}
+
+.stopInfo img {
+	width: 3em;
+	margin-right: 1em;
+}
+
+.timeTable table td, th {
+	font-size: 10px;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.info h4 {
+	margin: 0 0 5px;
+	color: #777;
+	font-size: 16px;
+}
+
+h2.stopInfo {
+	font-weight: bold;
+	/*color: #7E1ED0;*/
+	color: #FE5300;
+	font-size: 150%;
+	text-align: center;
+}
+
+h3.stopInfo {
+	font-weight: bold;
+	/*color: #7E1ED0;	*/
+	color: #FE5300;
+	font-size: 110%;
+	text-align: right;
+}
+
+td.path_line_number {
+	font-weight: bold;
+	/*color: #7E1ED0;*/
+	color: #FE5300;
+}
+
+img.path_route_image {
+	width: 1.5em;
+}
+
+table.pathDescription th, table.pathDescription td {
+	font-size: 100%;
+	text-align: center;
+}
+
+table.pathDescription th {
+	font-weight: bold;
+}
+
+div.introInfo {
+	margin: 300 px;
+	padding: 6px 8px;
+	font: 14px/16px Arial, Helvetica, sans-serif;
+	background: white;
+	background: rgba(255, 255, 255, 0.9);
+	box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+	border-radius: 5px;
+	/*text-indent:0px;*/
+}
+
+
+div.introInfo h2 {
+	font-size: 200%;
+	/*color: #00D300;*/
+	color: #FE5300;
+	text-align: center;
+	padding-bottom: 0.5em;
+}
+
+div.introInfo h3 {
+	font-size: 150%;
+	/*color: #00D300;*/
+	color: #FE5300;
+	text-align: center;
+	padding-bottom: 1em;
+}
+
+div.introInfo .highlight {
+	color: #FE5300;
+}
+
+div.introInfo ul li {
+	background-image: url(../images/icons/sqorange.gif);
+	background-repeat: no-repeat;
+	background-position: 12px 4px;
+	padding: 0;
+	padding-bottom: 8px;
+	text-index: 10px;
+}
+
+div.introInfo .understood, div.introInfo .understood a {
+	text-decoration: none;
+	text-align: right;
+	color: black;
+}
+
+.leaflet-popup-content-wrapper {
+	text-indent: 0px;
+}
+
+.leaflet-popup-content-wrapper .leaflet-popup-content {
+	text-indent: 0px;
+}
+
+.leaflet-popup-tip-container {
+	text-indent: 0px;
+}
+
+.leaflet-container a.leaflet-popup-close-button {
+	text-indent: 0px;
+}
+
+/* Forms: obtained from http://www.webstuffshare.com/2012/07/mini-collection-for-prefix-postfix-input-form/ */
+/* Using Font Awesome - http://fortawesome.github.com/Font-Awesome */
+@font-face {
+	font-family: "FontAwesome";
+	src: url('font/fontawesome-webfont.eot');
+	src: url('font/fontawesome-webfont.eot?#iefix') format('eot'),
+		url('font/fontawesome-webfont.woff') format('woff'),
+		url('font/fontawesome-webfont.ttf') format('truetype'),
+		url('font/fontawesome-webfont.svg#FontAwesome') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+/* Postfix and Prefix styling start here */
+.ppfix {
+	margin: 0;
+	vertical-align: top;
+	display: inline-block;
+	font-family: "Pontano Sans";
+	font-size: 13px;
+	color: #343434;
+	min-width: 150px;
+	height: 20px;
+	background: #fbfbfb;
+	border: 1px solid #cccdcf;
+	padding: 8px 10px;
+	box-shadow: inset 0 2px 3px #e8e8e8;
+	text-indent: 5px;
+}
+
+.ppfix:focus {
+	outline: none;
+}
+
+.pre {
+	margin: 0;
+	border-top-right-radius: 2px;
+	border-bottom-right-radius: 2px;
+	-moz-border-radius-topright: 2px;
+	-moz-border-radius-bottomright: 2px;
+	-webkit-border-top-right-radius: 2px;
+	-webkit-border-bottom-right-radius: 2px;
+	text-indent: 5px;
+}
+
+.prefix {
+	vertical-align: top;
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	padding: 8px 10px;
+	background: #f2f2f2;
+	border: 1px solid #cccdcf;
+	border-right: 0;
+	border-top-left-radius: 2px;
+	border-bottom-left-radius: 2px;
+	-moz-border-radius-topleft: 2px;
+	-moz-border-radius-bottomleft: 2px;
+	-webkit-border-top-left-radius: 2px;
+	-webkit-border-bottom-left-radius: 2px;
+	text-indent: 5px;
+}
+
+.post {
+	border-top-left-radius: 2px;
+	border-bottom-left-radius: 2px;
+	-moz-border-radius-topleft: 2px;
+	-moz-border-radius-bottomleft: 2px;
+	-webkit-border-top-left-radius: 2px;
+	-webkit-border-bottom-left-radius: 2px;
+}
+
+.postfix {
+	vertical-align: top;
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	padding: 8px 10px;
+	background: #f2f2f2;
+	border: 1px solid #cccdcf;
+	border-left: 0;
+	border-top-right-radius: 2px;
+	border-bottom-right-radius: 2px;
+	-moz-border-radius-topright: 2px;
+	-moz-border-radius-bottomright: 2px;
+	-webkit-border-top-right-radius: 2px;
+	-webkit-border-bottom-right-radius: 2px;
+}
+
+.prefix, .postfix {
+	font-family: FontAwesome;
+	line-height: 1.5em;
+	font-size: 16px;
+	color: #737373;
+	text-indent: 5px;
+}
+
+.prefix.orange, .postfix.orange {
+	background: #ffb700;
+	background:
+		url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmYjcwMCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZjhjMDAiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+	background: -moz-linear-gradient(top, #ffb700 0%, #ff8c00 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffb700),
+		color-stop(100%, #ff8c00));
+	background: -webkit-linear-gradient(top, #ffb700 0%, #ff8c00 100%);
+	background: -o-linear-gradient(top, #ffb700 0%, #ff8c00 100%);
+	background: -ms-linear-gradient(top, #ffb700 0%, #ff8c00 100%);
+	background: linear-gradient(to bottom, #ffb700 0%, #ff8c00 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffb700',
+		endColorstr='#ff8c00', GradientType=0);
+	border: 1px solid #e59500;
+	color: #fff;
+}
+
+
+
+.prefix.green, .postfix.green {
+	background: #008000;
+	background:
+		url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2I4ZTE3MiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM3NGFkMzciIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+	background: -moz-linear-gradient(top, #b8e172 0%, #74ad37 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #b8e172),
+		color-stop(100%, #74ad37));
+	background: -webkit-linear-gradient(top, #b8e172 0%, #74ad37 100%);
+	background: -o-linear-gradient(top, #b8e172 0%, #74ad37 100%);
+	background: -ms-linear-gradient(top, #b8e172 0%, #74ad37 100%);
+	background: linear-gradient(to bottom, #b8e172 0%, #74ad37 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b8e172',
+		endColorstr='#74ad37', GradientType=0);
+	border: 1px solid #689b32;
+	color: #fff;
+}
+
+
+
+span.prefix.marker:before, span.postfix.marker:before {
+	content: "\f041";
+}
+
+
+div#ui-datepicker-div {
+	/* just for chrome, should be useless but otherwise, datepicker width pb */
+	text-indent: 0px;
+}
