@@ -753,6 +753,11 @@ function affStops(){
 				}
 				stops[i].circle = stops[pid].circle;
 			}
+			else{
+				if (!stops[i].circle){ // in the normal map of Toulouse, this should not happen UNLESS a parentStation has no childStation...
+					stops[i].isActive = false;
+				}
+			}
 		}
 		if (debug_mode) console.log('affStops finished!');
 		createControls();
