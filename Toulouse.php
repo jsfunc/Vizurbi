@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<title>Test!</title>
+<title>Vizurbi!</title>
 
 <meta name="Description"
 	content="Tisseo Université Paul Sabatier UPS Open Data" />
