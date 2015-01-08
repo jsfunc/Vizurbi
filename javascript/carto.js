@@ -1820,37 +1820,8 @@ function RoutesDelayMode(opacite){
 	}
 }
 
-// Permet de récuperer l'heure et les minutes en temps réel du moment présent
-function showTime(){ 
-    var myDate = new Date(); 
-    var time = myDate.getTime(); 
-    var hour = myDate.getHours(); 
-    var minute = myDate.getMinutes(); 
-    if (hour < 10) { hour = "0" + hour; } 
-    if (minute < 10) { minute = "0" + minute; } 
-    var theDate = " " + hour + ":" + minute; 
-}
-
-function Delay(limit) {
-	for(var i=0; i<_trips.length; i++) {
-		var heureActuelle = showTime();
-		var j=0; 
-		while (heureActuelle > _trips[i].times[j]) {j++;}
-		var indice = j ;
-		var retard = _trips[i].times_real[indice] - _trips[i].times[indice];
-		if (retard > limit) {
-			if (stops[_trips[i].stops[indice]].isActive) {stops[_trips[i].stops[indice]].circle.setStyle({fillColor:"#FF0000", fillOpacity:opacite});}
-			//if (stops[_trips[i].stops[{indice++}]].isActive) {stops[_trips[i].stops[{indice++}]].circle.setStyle({fillColor:"#FF0000", fillOpacity:opacite});}
-			//if (stops[_trips[i].stops[{indice+2}]].isActive) {stops[_trips[i].stops[{indice+2}]].circle.setStyle({fillColor:"#FF0000", fillOpacity:opacite});}
-		}
-		//InfoReseau = L.control({position: 'topleft'});
 
 
-
-
-	}
-
-}
 
 
 
