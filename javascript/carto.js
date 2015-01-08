@@ -265,7 +265,6 @@ function createMap() {
 
 	var cmAttr = '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
 	//cmUrl = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png';
-	//cmUrl = 'http://{s}.tile.osm.org/hot/{z}/{x}/{y}.png';
 	cmUrl = 'http://{s}.tile.openstreetmap.se/hydda/full/{z}/{x}/{y}.png';
 
 	// Quelques styleId : représentation du fond de la carte: http://maps.cloudmade.com/editor 				
