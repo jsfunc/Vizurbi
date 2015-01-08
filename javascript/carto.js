@@ -264,7 +264,8 @@ function createMap() {
 	network = new L.LayerGroup();		
 
 	var cmAttr = '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-	cmUrl = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png';
+	//cmUrl = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png';
+	cmUrl = 'http://{s}.tile.Openstreetmap.fr/hot/{z}/{x}/{y}.png';
 
 
 	// Quelques styleId : représentation du fond de la carte: http://maps.cloudmade.com/editor 				
@@ -551,6 +552,7 @@ function onTripsLoaded(file){
 			newTrip.shapeId = shapeIndex[String(descr[5])];
 			newTrip.stops = new Array;
 			newTrip.times = new Array;
+			newTrip.times_real = new Array;
 			newTrip.frequency = {freq:NaN, startTime:0, endTime:0}; // by default, may be updated in readFrequencies
 			_trips.push(newTrip);
 		}
@@ -574,7 +576,8 @@ function onStop_timesLoaded(file){
 			var tripId = _tripIndex[String(descr[0])];
 			var stopSequence = Number(descr[2]); // index of the stop in the trip
 			_trips[tripId].stops[stopSequence] = stopIndex[String(descr[1])]; 
-			_trips[tripId].times[stopSequence] = readTime(String(descr[3])); 
+			_trips[tripId].times[stopSequence] = readTime(String(descr[3]));
+			_trips[tripId].times_real[stopSequence] = readTime(String(descr[9])); 	
 			// also load the remaining information
 			// warning: should take both arrival_time and departure_time
 		}
@@ -1340,10 +1343,11 @@ function pathDescription(p, lastName){
 //Reset stops coloration 
 function reset(){
 	if (debug_mode) var startTime = performance.now();	
-	for(var i=0; i<stops.length; i++) 
-		stops[i].circle.setStyle({fillColor:inactiveNodeColor, fillOpacity:0.5}); 
-
-
+	for(var i=0; i<stops.length; i++) {
+		if (stops[i].isActive) {
+			stops[i].circle.setStyle({fillColor:inactiveNodeColor, fillOpacity:0.5}); 
+		}
+	}
 	if (debug_mode) console.log("Reset: "+(performance.now()-startTime));
 
 }
@@ -1728,5 +1732,125 @@ function vehicleMovie(){
 	}	
 	iter();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Lines Delay
+var continueLineDelay = true;
+var lineDelayOn = false;
+
+/* toggleLineDelay est appelé dans le php quand on clique sur le bouton "retard du réseau" */
+function toggleLineDelay(){
+	var button = document.getElementById("lineDelay") ;
+	// Pas d'animation
+	if (lineDelayOn){        	
+		button.innerHTML = "Retard du réseau" ; 
+		continueLineDelay = false;
+	}
+	// Animation en cours
+	else{
+		button.innerHTML = "Arr&ecirc;ter l'animation" ; 
+		continueLineDelay = true;
+		lineDelay();
+	}	
+}
+
+/* La fonction lineDelay permet d'appeller les autres fonctions */
+function lineDelay() {
+	lineDelayOn = true;
+	continueLineDelay = true;
+	// Appel de la fonction StopsDelayMode avec 1 comme opacité
+	StopsDelayMode(1);
+	// Appel de la fonction RoutesDelayMode avec 1 comme opacité
+	RoutesDelayMode(1);
+	function iter(){
+		if (continueLineDelay) {
+			// Appel la fonction iter tout les "sleepDelay" -> Ligne 1621 : 1000*Math.exp(-5/100*Number(ui.value))
+			setTimeout(iter, sleepDelay); 
+		}
+		else{
+			lineDelayOn = false;
+			// Appel de la fonction StopsDelayMode avec 0 comme opacité (rouge non visible)
+			StopsDelayMode(0);
+			// Appel de la fonction RoutesDelayMode avec 0 comme opacité (rouge non visible)
+			RoutesDelayMode(0);
+			//Delay();
+		}
+	}
+	iter();	
+}
+
+// Permet d'afficher tout les arrets (stops) en rouge en fonction de l'opacité
+function StopsDelayMode(opacite){
+	for(var i=0; i<stops.length; i++) {
+		if (stops[i].isActive) { // si l'arret existe
+			stops[i].circle.setStyle({fillColor:"#FF0000", fillOpacity:opacite});
+		}
+	}
+}
+
+// Permet d'afficher tout les routes en rouge en fonction de l'opacité
+function RoutesDelayMode(opacite){
+	for(var j=0; j<routes.length; j++) {
+		routes[j].polyline.setStyle({color:"#FF0000", opacity:opacite});
+	}
+}
+
+// Permet de récuperer l'heure et les minutes en temps réel du moment présent
+function showTime(){ 
+    var myDate = new Date(); 
+    var time = myDate.getTime(); 
+    var hour = myDate.getHours(); 
+    var minute = myDate.getMinutes(); 
+    if (hour < 10) { hour = "0" + hour; } 
+    if (minute < 10) { minute = "0" + minute; } 
+    var theDate = " " + hour + ":" + minute; 
+}
+
+function Delay(limit) {
+	for(var i=0; i<_trips.length; i++) {
+		var heureActuelle = showTime();
+		var j=0; 
+		while (heureActuelle > _trips[i].times[j]) {j++;}
+		var indice = j ;
+		var retard = _trips[i].times_real[indice] - _trips[i].times[indice];
+		if (retard > limit) {
+			if (stops[_trips[i].stops[indice]].isActive) {stops[_trips[i].stops[indice]].circle.setStyle({fillColor:"#FF0000", fillOpacity:opacite});}
+			//if (stops[_trips[i].stops[{indice++}]].isActive) {stops[_trips[i].stops[{indice++}]].circle.setStyle({fillColor:"#FF0000", fillOpacity:opacite});}
+			//if (stops[_trips[i].stops[{indice+2}]].isActive) {stops[_trips[i].stops[{indice+2}]].circle.setStyle({fillColor:"#FF0000", fillOpacity:opacite});}
+		}
+		//InfoReseau = L.control({position: 'topleft'});
+
+
+
+
+	}
+
+}
+
 
 
