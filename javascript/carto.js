@@ -264,8 +264,7 @@ function createMap() {
 	network = new L.LayerGroup();		
 
 	var cmAttr = '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-	//cmUrl = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png';
-	cmUrl = 'http://{s}.tile.Openstreetmap.fr/hot/{z}/{x}/{y}.png';
+	cmUrl = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png';
 
 
 	// Quelques styleId : représentation du fond de la carte: http://maps.cloudmade.com/editor 				
@@ -552,7 +551,7 @@ function onTripsLoaded(file){
 			newTrip.shapeId = shapeIndex[String(descr[5])];
 			newTrip.stops = new Array;
 			newTrip.times = new Array;
-			newTrip.times_real = new Array;
+			newTrip.timesReal = new Array;
 			newTrip.frequency = {freq:NaN, startTime:0, endTime:0}; // by default, may be updated in readFrequencies
 			_trips.push(newTrip);
 		}
@@ -572,12 +571,12 @@ function onStop_timesLoaded(file){
 		// skip first line: colNames
 		for (var i=1; i<flines.length; i++) if (flines[i].length>0){
 			var descr=flines[i].split(RegExp(",","g"));
-			//trip_id,stop_id,stop_sequence,arrival_time,departure_time,stop_headsign,pickup_type,drop_off_type,shape_dist_traveled
+			//trip_id,stop_id,stop_sequence,arrival_time,departure_time,stop_headsign,pickup_type,drop_off_type,shape_dist_traveled,arrival_time_real
 			var tripId = _tripIndex[String(descr[0])];
 			var stopSequence = Number(descr[2]); // index of the stop in the trip
 			_trips[tripId].stops[stopSequence] = stopIndex[String(descr[1])]; 
-			_trips[tripId].times[stopSequence] = readTime(String(descr[3]));
-			_trips[tripId].times_real[stopSequence] = readTime(String(descr[9])); 	
+			_trips[tripId].times[stopSequence] = readTime(String(descr[3])); 
+			_trips[tripId].timesReal[stopSequence] = readTime(String(descr[9])); 
 			// also load the remaining information
 			// warning: should take both arrival_time and departure_time
 		}
@@ -636,6 +635,9 @@ function createSubRoutes(){
 			var pos = subRoute.timeTable.length;
 			while ((pos>0) && (_trips[i].times[0]<subRoute.timeTable[pos-1][0])) --pos;// has to insert the trip in increasing order of starting time, unfortunately not always satisfied by the data (pb of midnight-> 0 or 24?)
 			subRoute.timeTable.splice(pos, 0, _trips[i].times); // ATTENTION ça ne va pas comme ça, on mélange les différents services ! au minimum il faut garder le serviceId correspondant, pour après regarder si ça a lieu le jour demandé
+			
+			subRoute.timeRealTable.splice(pos, 0, _trips[i].timesReal);
+			
 			subRoute.frequencies.splice(pos, 0, _trips[i].frequency);
 			subRoute.serviceIds.splice(pos, 0, _trips[i].serviceId);
 		}
@@ -646,6 +648,8 @@ function createSubRoutes(){
 			subRoute.serviceIds.push(_trips[i].serviceId);
 			subRoute.timeTable = new Array;
 			subRoute.timeTable.push(_trips[i].times); 
+			subRoute.timeRealTable = new Array;
+			subRoute.timeRealTable.push(_trips[i].timesReal); 
 			subRoute.frequencies = new Array;
 			subRoute.frequencies.push(_trips[i].frequency);
 			subRoute.id = subRoutes.length;
@@ -1343,11 +1347,10 @@ function pathDescription(p, lastName){
 //Reset stops coloration 
 function reset(){
 	if (debug_mode) var startTime = performance.now();	
-	for(var i=0; i<stops.length; i++) {
-		if (stops[i].isActive) {
-			stops[i].circle.setStyle({fillColor:inactiveNodeColor, fillOpacity:0.5}); 
-		}
-	}
+	for(var i=0; i<stops.length; i++) 
+		stops[i].circle.setStyle({fillColor:inactiveNodeColor, fillOpacity:0.5}); 
+
+
 	if (debug_mode) console.log("Reset: "+(performance.now()-startTime));
 
 }
@@ -1759,6 +1762,10 @@ function vehicleMovie(){
 
 
 
+
+
+
+
 //Lines Delay
 var continueLineDelay = true;
 var lineDelayOn = false;
@@ -1819,9 +1826,3 @@ function RoutesDelayMode(opacite){
 		routes[j].polyline.setStyle({color:"#FF0000", opacity:opacite});
 	}
 }
-
-
-
-
-
-
