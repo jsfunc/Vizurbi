@@ -1,25 +1,3 @@
-function include(src, attributes)
-{
-	try {
-	    	attributes = attributes || {};
-	        attributes.type = "text/javascript";
-	        attributes.src = src;
-	 
-	        var script = document.createElement("script");
-	        for(aName in attributes)
-	            script[aName] = attributes[aName];
-	 
-	        document.getElementsByTagName("head")[0].appendChild(script);
-	        return true;
-	    } catch(e) { return false; }
-}
-
-include('toolbox.js');
-include('map.js');
-include('parameter.js');
-include('loading.js');
-include('math.js');
-
 debug_mode = true;
 activeRouteColor =  "#4f8598";// "#009933";
 inactiveRouteColor = "#a9c5d0";
