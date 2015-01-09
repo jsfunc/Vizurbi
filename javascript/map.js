@@ -104,6 +104,7 @@ function createSubRoutes(){
 			var pos = subRoute.timeTable.length;
 			while ((pos>0) && (_trips[i].times[0]<subRoute.timeTable[pos-1][0])) --pos;// has to insert the trip in increasing order of starting time, unfortunately not always satisfied by the data (pb of midnight-> 0 or 24?)
 			subRoute.timeTable.splice(pos, 0, _trips[i].times); // ATTENTION ça ne va pas comme ça, on mélange les différents services ! au minimum il faut garder le serviceId correspondant, pour après regarder si ça a lieu le jour demandé
+			subRoute.timeRealTable.splice(pos, 0, _trips[i].timesReal);
 			subRoute.frequencies.splice(pos, 0, _trips[i].frequency);
 			subRoute.serviceIds.splice(pos, 0, _trips[i].serviceId);
 		}
@@ -114,6 +115,8 @@ function createSubRoutes(){
 			subRoute.serviceIds.push(_trips[i].serviceId);
 			subRoute.timeTable = new Array;
 			subRoute.timeTable.push(_trips[i].times); 
+			subRoute.timeRealTable = new Array;
+			subRoute.timeRealTable.push(_trips[i].timesReal); 
 			subRoute.frequencies = new Array;
 			subRoute.frequencies.push(_trips[i].frequency);
 			subRoute.id = subRoutes.length;

@@ -178,3 +178,74 @@ function toggleDayMovie()
 	}
 
 }
+
+
+
+
+// Retard du réseau
+
+//Lines Delay
+var continueLineDelay = true;
+var lineDelayOn = false;
+
+/* toggleLineDelay est appelé dans le php quand on clique sur le bouton "retard du réseau" */
+function toggleLineDelay(){
+	var button = document.getElementById("lineDelay") ;
+	// Pas d'animation
+	if (lineDelayOn){        	
+		button.innerHTML = "Retard du réseau" ; 
+		continueLineDelay = false;
+	}
+	// Animation en cours
+	else{
+		button.innerHTML = "Arr&ecirc;ter l'animation" ; 
+		continueLineDelay = true;
+		lineDelay();
+	}	
+}
+
+/* La fonction lineDelay permet d'appeller les autres fonctions */
+function lineDelay() {
+	lineDelayOn = true;
+	continueLineDelay = true;
+	// Appel de la fonction StopsDelayMode avec 1 comme opacité
+	StopsDelayMode(1);
+	// Appel de la fonction RoutesDelayMode avec 1 comme opacité
+	RoutesDelayMode(1);
+	function iter(){
+		if (continueLineDelay) {
+			// Appel la fonction iter tout les "sleepDelay" -> Ligne 1621 : 1000*Math.exp(-5/100*Number(ui.value))
+			setTimeout(iter, sleepDelay); 
+		}
+		else{
+			lineDelayOn = false;
+			// Appel de la fonction StopsDelayMode avec 0 comme opacité (rouge non visible)
+			StopsDelayMode(0);
+			// Appel de la fonction RoutesDelayMode avec 0 comme opacité (rouge non visible)
+			RoutesDelayMode(0);
+			//Delay();
+		}
+	}
+	iter();	
+}
+
+// Permet d'afficher tout les arrets (stops) en rouge en fonction de l'opacité
+function StopsDelayMode(opacite){
+	for(var i=0; i<stops.length; i++) {
+		if (stops[i].isActive) { // si l'arret existe
+			stops[i].circle.setStyle({fillColor:"#FF0000", fillOpacity:opacite});
+		}
+	}
+}
+
+// Permet d'afficher tout les routes en rouge en fonction de l'opacité
+function RoutesDelayMode(opacite){
+	for(var j=0; j<routes.length; j++) {
+		routes[j].polyline.setStyle({color:"#FF0000", opacity:opacite});
+	}
+}
+
+
+
+
+

@@ -439,6 +439,7 @@ function onStop_timesLoaded(file){
 			var stopSequence = Number(descr[2]); // index of the stop in the trip
 			_trips[tripId].stops[stopSequence] = stopIndex[String(descr[1])]; 
 			_trips[tripId].times[stopSequence] = readTime(String(descr[3])); 
+			_trips[tripId].timesReal[stopSequence] = readTime(String(descr[9])); 
 			// also load the remaining information
 			// warning: should take both arrival_time and departure_time
 		}
