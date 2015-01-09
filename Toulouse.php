@@ -88,6 +88,10 @@
 						style="float: right" href="javascript:toggleVehicleMovie();">
 						<span class="video" id="vehicleMovie"> Le ballet des bus </span>
 					</a>
+					<a class="orange5 awesome"
+						style="float: right" href="javascript:toggleLineDelay();">
+						<span class="video" id="lineDelay">Retard du réseau</span>
+					</a>
 				</div>
 				<!--<a class="orange3 awesome" style="float:right" href="failed.php"><span class="meet"> On se rencontre où? </span></a> -->
 
