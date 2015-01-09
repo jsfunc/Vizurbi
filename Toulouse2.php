@@ -47,14 +47,9 @@
 	src="plugins/fancybox/jquery.fancybox.pack.js?v=2.1.5"></script>
 
 
-<!-- <script type="text/javascript" src="javascript/carto.js"></script>-->
-<script type="text/javascript" src="javascript/loading.js"></script>
-<script type="text/javascript" src="javascript/on_off.js"></script>
-<script type="text/javascript" src="javascript/map.js"></script>
-<script type="text/javascript" src="javascript/math.js"></script>
-<script type="text/javascript" src="javascript/parameter.js"></script>
-<script type="text/javascript" src="javascript/toolbox.js"></script>
+<script type="text/javascript" src="javascript/carto.js"></script>
 </head>
+
 
 <body id="page">
 
@@ -87,6 +82,10 @@
 					<a class="orange5 awesome"
 						style="float: right" href="javascript:toggleVehicleMovie();">
 						<span class="video" id="vehicleMovie"> Le ballet des bus </span>
+					</a>
+					<a class="orange5 awesome"
+						style="float: right" href="javascript:toggleLineDelay();">
+						<span class="video" id="lineDelay">Retard du réseau</span>
 					</a>
 				</div>
 				<!--<a class="orange3 awesome" style="float:right" href="failed.php"><span class="meet"> On se rencontre où? </span></a> -->
@@ -439,9 +438,3 @@
 	</div>
 </body>
 </html>
-
-
-
-
-
-
