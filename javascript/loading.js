@@ -415,6 +415,7 @@ function onTripsLoaded(file){
 			newTrip.shapeId = shapeIndex[String(descr[5])];
 			newTrip.stops = new Array;
 			newTrip.times = new Array;
+			newTrip.timesReal = new Array;
 			newTrip.frequency = {freq:NaN, startTime:0, endTime:0}; // by default, may be updated in readFrequencies
 			_trips.push(newTrip);
 		}
