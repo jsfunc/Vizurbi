@@ -1,7 +1,3 @@
-
-//Vehicle Movie
-var continueVehicleMovie = true;
-var vehicleMovieOn = false;
 debug_mode = true;
 inactiveNodeColor = "gray";
 activeRouteColor =  "#4f8598";// "#009933";
@@ -332,11 +328,7 @@ function affRouteInfo(routeId){
 	map.scrollWheelZoom.disable();
 	tt="<div class=\"timeTable\"><a  href=# onClick='lineInfo.update(\"Clic droit pour avoir les horaires de la ligne ou de passage au stop\");map.scrollWheelZoom.enable();' style=\"position:absolute; right:10px;\"><img src=\"images/icons/close.png\" width=\"30px\"/></a><br/><br/>"+tt+"</div>";
 	lineInfo.update(tt);
-
-
 }
-
-
 
 function drawAccessible(){
 	if (debug_mode) var startTime = performance.now();	
@@ -368,110 +360,3 @@ function drawAccessibleZones(){
 	}
 	if (debug_mode) console.log("drawAccessibleZones: "+(performance.now()-startTime));	
 }
-
-
-
-function dayMovie(){
-	continueDayMovie = true;
-	var oldStartHour = startHour;
-	var dt = 1/60; // toutes les minutes	
-	function iter(){
-		startHour += dt;
-		//	$('#slider-hour-vertical').slider("value", startHour);
-		$( "#startHour" ).val(real2hour(startHour));
-		computeShortestPath();
-		drawAccessible();			
-		if (startHour<25 && continueDayMovie) setTimeout(iter, sleepDelay); 
-		else $('#slider-hour-vertical').slider("value", startHour);
-	}
-	iter();
-	startHour = oldStartHour;
-	computeShortestPath();
-	drawAccessible();		
-}
-
-
-
-function affVehicles(subRoute, hour){
-	for (var j=0; j<subRoute.serviceIds.length; j++){
-		if (isOn(services[subRoute.serviceIds[j]], date) && subRoute.timeTable[j][0]<hour) {
-			if (isFinite(subRoute.frequencies[j].freq)){
-				var tripLength = subRoute.timeTable[j][subRoute.timeTable[j].length-1]-subRoute.timeTable[j][0];
-				if (hour<subRoute.frequencies[j].endTime+tripLength){
-					for (var delta = 0; (subRoute.timeTable[j][0]+delta<=subRoute.frequencies[j].endTime+1/3600) && (subRoute.timeTable[j][0]+delta<hour); delta += subRoute.frequencies[j].freq){
-						var knext = 1;
-						for (; knext<subRoute.stops.length; ++knext) if (subRoute.timeTable[j][knext] + delta > hour) break;
-						if (knext<subRoute.stops.length){ 
-							var kprev = knext - 1;
-							while (subRoute.timeTable[j][kprev-1] == subRoute.timeTable[j][kprev]) --kprev; // CONTESTABLE MAIS PLUS SMOOTH si le bus doit passer à la même heure à deux arrêts
-							var a = stops[subRoute.stops[kprev]].subRoutes[subRoute.id].posInShape;
-							var b = stops[subRoute.stops[knext]].subRoutes[subRoute.id].posInShape;
-							var p = shapes[subRoute.shapeId].stops[a];
-							if (b>a){  // on n'est jamais trop prudent...
-								//mettre un petit temps d'attente à chaque arrêt ?
-								var dt = (subRoute.timeTable[j][knext]-subRoute.timeTable[j][kprev]);
-								var i= a + Math.floor((b-a)* (hour-(subRoute.timeTable[j][kprev]+delta)) / dt);
-								var ti = subRoute.timeTable[j][kprev] + delta + (i-a) / (b-a) * dt;
-								p = interpolatePoint(shapes[subRoute.shapeId].stops[i], shapes[subRoute.shapeId].stops[i+1], (hour-ti)/dt*(b-a));
-							}
-							vehicles.addLayer(L.circleMarker(p, {color:"black", opacity:1, "radius":4, "stroke": false, "fillOpacity":1, clickable:false}));	
-						}
-					}
-				}
-			}
-			else{
-				var knext = 1;
-				for (; knext<subRoute.stops.length; ++knext) if (subRoute.timeTable[j][knext]>hour) break;
-				if (knext<subRoute.stops.length){ 
-					var kprev = knext - 1;
-					while (subRoute.timeTable[j][kprev-1] == subRoute.timeTable[j][kprev]) --kprev; // CONTESTABLE MAIS PLUS SMOOTH si le bus doit passer à la même heure à deux arrêts
-					var a = stops[subRoute.stops[kprev]].subRoutes[subRoute.id].posInShape;
-					var b = stops[subRoute.stops[knext]].subRoutes[subRoute.id].posInShape;
-					var p = shapes[subRoute.shapeId].stops[a];
-					if (b>a){  // on n'est jamais trop prudent...
-						//mettre un petit temps d'attente à chaque arrêt ?
-						var dt = (subRoute.timeTable[j][knext]-subRoute.timeTable[j][kprev]);
-						var i= a + Math.floor((b-a)* (hour-subRoute.timeTable[j][kprev]) / dt);
-						var ti = subRoute.timeTable[j][kprev] + (i-a) / (b-a) * dt;
-						p = interpolatePoint(shapes[subRoute.shapeId].stops[i], shapes[subRoute.shapeId].stops[i+1], (hour-ti)/dt*(b-a));
-					}
-					vehicles.addLayer(L.circleMarker(p, {color:"black", opacity:1, "radius":4, "stroke": false, "fillOpacity":1, clickable:false}));
-					//vehicles.addLayer(L.circleMarker(shapes[subRoute.shapeId].stops[i], {color:"black", opacity:1, "radius":4, "stroke": false, "fillOpacity":1, clickable:false}));
-					//vehicles.addLayer(new L.circleMarker(stops[subRoute.stops[k]], {color:"black", opacity:1, "radius":4, "stroke": false, "fillOpacity":1, clickable:false})); // last stop visited
-				}
-			}
-		}
-	}
-}
-
-function affActiveVehicles(hour){
-	vehicles.clearLayers();
-	for (var i=0; i<subRoutes.length; i++) 
-		if (isActiveRoute[subRoutes[i].routeId])
-			affVehicles(subRoutes[i], hour);
-}
-
-
-function vehicleMovie(){
-	var dt = 0.1/60;
-	vehicleMovieOn = true;
-	continueVehicleMovie = true;
-	var t = startHour;
-	function iter(){
-		t += dt;
-		//if (Math.floor(3600*t) % 60 < 60*dt) $('#slider-hour-vertical').slider("value", t); // too slow, even with the test!
-		$( "#startHour" ).val(real2hour(t));
-		affActiveVehicles(t);
-		if (continueVehicleMovie) setTimeout(iter, sleepDelay);
-		else{
-			vehicles.clearLayers();
-			vehicleMovieOn = false;
-			startHour = t;
-			$('#slider-hour-vertical').slider("value", startHour); //should not be useful
-			$( "#startHour" ).val(real2hour(startHour)); //should not be useful
-		}
-	}	
-	iter();
-}
-
-

@@ -86,17 +86,6 @@ function readDate(){ // affects global variables: date, weekDay
 	weekDay = dayNb[$.datepicker.formatDate( "D", $( "#datepicker" ).datepicker( "getDate" ))];
 }
 
-
-//Reset stops coloration 
-function reset(){
-	if (debug_mode) var startTime = performance.now();	
-	for(var i=0; i<stops.length; i++) 
-		if (stops[i].isActive) {stops[i].circle.setStyle({fillColor:inactiveNodeColor, fillOpacity:0.5}); }
-	if (debug_mode) console.log("Reset: "+(performance.now()-startTime));
-
-}
-
-
 function getPath(dest){ // warning: returns only the bus stations we step in and out - see also getDetailedStopSequence
 	if (comesFrom[dest].stopId>=0){
 		var pathFather = getPath(comesFrom[dest].stopId);
@@ -121,10 +110,4 @@ function getDetailedStopSequence(dest){
 		return(pathFather);
 	}
 	else return([dest]);
-}
-
-
-/* Vehicle movie */
-function interpolatePoint(p1, p2, x){ // interpolates between L.latlng p1 and p2 with proportion x 
-	return(new L.LatLng((1-x)*p1.lat+x*p2.lat, (1-x)*p1.lng+x*p2.lng));
 }
