@@ -158,42 +158,41 @@ function toggleDayMovie() {
 
 /* ------------------------------------------- Vue : Retard du réseau ------------------------------------------ */
 
-//Lines Delay
-var continueLineDelay = true;
-var lineDelayOn = false;
+var	continueLineDelay = true;
+var	lineDelayOn = false;
+var parametre = false;
 
 /* toggleLineDelay est appelé dans le php quand on clique sur le bouton "retard du réseau" */
 function toggleLineDelay(){
 	// Initialisation du bouton "Retard du réseau"
 	var button = document.getElementById("lineDelay") ;
 	// Pas d'animation
-	if (lineDelayOn){        	
+	if (lineDelayOn){ 	
 		button.innerHTML = "Retard du réseau" ; 
 		continueLineDelay = false;
+		parametre = false;
 	}
 	// Animation en cours
 	else{
-		button.innerHTML = "Arr&ecirc;ter l'animation" ; 
+		button.innerHTML = "Arr&ecirc;ter l'animation" ;	
+		parametre = true;
 		continueLineDelay = true;
 		// On efface tout ce qu'il y a sur la map
 		reset();
 		// On appelle la fonction lineDelay
 		lineDelay();
-	}	
+	}
 }
 
 /* La fonction lineDelay permet d'appeller les autres fonctions */
 function lineDelay() {
-	// A supprimer apres deplacement et appel des ces fonctions autres parts
-	createSubShapes();
-	// ---- 
 	lineDelayOn = true;
 	continueLineDelay = true;
 	// Création des embouteillages dans le tableau stockage
 	lineDelayMode();
 	// fonction iter permettant d'appuyer plusieurs fois sur le bouton "Retard du réseau"
 	function iter(){
-		if (continueLineDelay) {reset();setTimeout(iter, sleepDelay);}
+		if (continueLineDelay) {setTimeout(iter, sleepDelay);}
 		else{
 			lineDelayOn = false;
 			// Efface les traits coloré de la route
