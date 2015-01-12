@@ -193,7 +193,7 @@ function lineDelay() {
 	lineDelayMode();
 	// fonction iter permettant d'appuyer plusieurs fois sur le bouton "Retard du réseau"
 	function iter(){
-		if (continueLineDelay) {setTimeout(iter, sleepDelay);}
+		if (continueLineDelay) {reset();setTimeout(iter, sleepDelay);}
 		else{
 			lineDelayOn = false;
 			// Efface les traits coloré de la route
@@ -219,9 +219,9 @@ function lineDelayMode() {
 				var retardB = subRoutes[i].timeRealTable[j][k+1] - subRoutes[i].timeTable[j][k+1];	
 				
 				// Si le temps réel et le temps officiel sont compris entre + ou - 5 min de l'heure actuelle et que le retard est important
-				if ( /*( subRoutes[i].timeRealTable[j][k]>= heureActuelleMoinsCinq) && ( subRoutes[i].timeRealTable[j][k]<= heureActuellePlusCinq)
+				if ( ( subRoutes[i].timeRealTable[j][k]>= heureActuelleMoinsCinq) && ( subRoutes[i].timeRealTable[j][k]<= heureActuellePlusCinq)
 					&& ( subRoutes[i].timeRealTable[j][k+1]>= heureActuelleMoinsCinq) && ( subRoutes[i].timeRealTable[j][k+1]<= heureActuellePlusCinq)
-					&& */ ((retardB - retardA) >= 0.17) ) {
+					&&  ((retardB - retardA) >= 0.08) ) {
 					
 					// Si le chemin existe, l'afficher en rouge
 					if(subRoutes[i].subShapes[k]) {subRoutes[i].subShapes[k].setStyle({opacity:1, color:"red"});}
