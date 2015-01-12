@@ -1,11 +1,13 @@
 ﻿<!DOCTYPE html>
+<!Content-Type: text/html; charset=iso-8859-1>
 <html>
 <head>
+
 <title>Vizurbi!</title>
 
 <meta name="Description"
 	content="Tisseo Université Paul Sabatier UPS Open Data" />
-<meta charset="UTF-8">
+
 <!-- reset all styles. Usefull before applying several stylesheets  -->
 <link rel="stylesheet" type="text/css" href="css/reset.css" />
 <!-- Useful for the datepicker -->
