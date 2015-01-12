@@ -5,7 +5,7 @@
 
 <meta name="Description"
 	content="Tisseo Université Paul Sabatier UPS Open Data" />
-
+<meta charset="UTF-8">
 <!-- reset all styles. Usefull before applying several stylesheets  -->
 <link rel="stylesheet" type="text/css" href="css/reset.css" />
 <!-- Useful for the datepicker -->
@@ -17,6 +17,9 @@
 <!-- All other styles -->
 <link rel="stylesheet" type="text/css" href="css/map.css" />
 
+<link rel="stylesheet"
+	href="plugins/fancybox/jquery.fancybox.css?v=2.1.5" type="text/css"
+	media="screen" />
 
 <script type="text/javascript" src="javascript/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="javascript/jquery-ui.js"></script>
@@ -40,9 +43,7 @@
 <script type="text/javascript" src="javascript/leaflet.spin.js"></script>
 
 <!-- Add fancyBox, modal window -->
-<link rel="stylesheet"
-	href="plugins/fancybox/jquery.fancybox.css?v=2.1.5" type="text/css"
-	media="screen" />
+
 <script type="text/javascript"
 	src="plugins/fancybox/jquery.fancybox.pack.js?v=2.1.5"></script>
 
