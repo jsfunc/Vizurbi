@@ -91,9 +91,7 @@ function readDate(){ // affects global variables: date, weekDay
 function reset(){
 	if (debug_mode) var startTime = performance.now();	
 	for(var i=0; i<stops.length; i++) 
-		stops[i].circle.setStyle({fillColor:inactiveNodeColor, fillOpacity:0.5}); 
-
-
+		if (stops[i].isActive) {stops[i].circle.setStyle({fillColor:inactiveNodeColor, fillOpacity:0.5}); }
 	if (debug_mode) console.log("Reset: "+(performance.now()-startTime));
 
 }
