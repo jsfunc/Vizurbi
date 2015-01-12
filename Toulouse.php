@@ -47,9 +47,15 @@
 	src="plugins/fancybox/jquery.fancybox.pack.js?v=2.1.5"></script>
 
 
-<script type="text/javascript" src="javascript/carto.js"></script>
-</head>
+<!-- <script type="text/javascript" src="javascript/carto.js"></script> -->
+<script type="text/javascript" src="javascript/toolbox.js"></script>
+<script type="text/javascript" src="javascript/loading.js"></script>
+<script type="text/javascript" src="javascript/map.js"></script>
+<script type="text/javascript" src="javascript/on_off.js"></script>
+<script type="text/javascript" src="javascript/parameter.js"></script>
+<script type="text/javascript" src="javascript/math.js"></script>
 
+</head>
 
 <body id="page">
 
