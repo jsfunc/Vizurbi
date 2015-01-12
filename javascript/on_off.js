@@ -331,7 +331,7 @@ function colorSubRoute(subRnum, durations){
 	}
 }
 
-/* --------------------- Commun a plusieurs vues ----------------------- */ 
+/* --------------------------------------- Commun a plusieurs vues ---------------------------------------------- */ 
 
 // Fonction permettant d'effacer les traits colorés de la route
 function normalMode(){
@@ -342,57 +342,4 @@ function normalMode(){
 			}					
 		}
 	} 
-}
-
-
-
-
-
-
-
-
-
-
-/* ------------------------------------------- A deplacer et appeler autre part ------------------------------------------ */
-
-
-
-// Cette fonction permet de créer la caractéristique subShapes de subRoutes
-// subShapes est le chemin reliant deux arrets qu'on peut colorier par la suite
-function createSubShapes(){
-	for(var i=0; i<subRoutes.length; i++){
-		var sub = new Array;
-		for(var j=0; j<subRoutes[i].stops.length-1; j++){
-			if (stops[subRoutes[i].stops[j]] && stops[subRoutes[i].stops[j+1]]) {
-				var stop1 = stops[subRoutes[i].stops[j]].subRoutes[i].posInShape;
-				var stop2 = stops[subRoutes[i].stops[j+1]].subRoutes[i].posInShape;
-				sub[j] = L.polyline(shapes[subRoutes[i].shapeId].stops.slice(stop1,stop2-1), {color:'white', opacity:0, fillOpacity:0, clickable: false}).addTo(map);
-			}
-		}
-		subRoutes[i].subShapes = sub;
-	}
-	if (debug_mode) console.log("createSubShapes finished!\n");
-}
-
-
-function computeTimes(){
-	for(var i=0; i<subRoutes.length; i++){
-		//just current day or all services ?
-		//all services for the time being
-		var min = new Array;
-		var max = new Array;
-		var newTime = 0;
-		var nbServices = subRoutes[i].serviceIds.length;
-		var nbStops = subRoutes[i].stops.length;
-		for(var j=0; j<nbServices; j++){
-			for(var k=0; k<nbStops-1; k++){
-				newTime = subRoutes[i].timeTable[j][k+1] - subRoutes[i].timeTable[j][k];
-				if(!min[k] || newTime < min[k]){min[k] = newTime;}
-				if(!max[k] || newTime > max[k]){max[k] = newTime;}
-			}
-		}
-		subRoutes[i].minTimes = min;
-		subRoutes[i].maxTimes = max;
-	}
-	if (debug_mode) console.log("computeTimes finished!\n");
 }
