@@ -239,13 +239,8 @@ function changeStartHour(event, ui ){// affects global variable: startHour
 	$( "#startHour" ).val(real2hour(startHour)); 
 	if (debug_mode) console.log("startHour : "+startHour+"\n");
 	computeShortestPath();
-	if(parametre){
-		normalMode();
-		lineDelay();
-	}
-	else {
-		drawAccessible();
-	}
+	if(continueLineDelay){lineDelay();}
+	else {drawAccessible();}
 }
 
 

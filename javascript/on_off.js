@@ -9,7 +9,6 @@ var vehicleMovieOn = false;
 var filmOn=0;
 var	continueLineDelay = true;
 var	lineDelayOn = false;
-var parametre = false;
 var continueLineMovie = true;
 var lineMovieOn = false;
 var continueVehicleMovie = true;
@@ -269,50 +268,45 @@ function dayMovie(){
 	computeShortestPath();
 	drawAccessible();		
 }
+/* ------------------------------------------- Vue : Retard du réseau ------------------------------------------ */
 
-/* ---------------------------------------------------- Vue : Retard du réseau -------------------------------------------------------- */
+var continueLineDelay = false;
+var lineDelayOn = false;
 
 /* toggleLineDelay est appelé dans le php quand on clique sur le bouton "retard du réseau" */
 function toggleLineDelay(){
+
 	// Initialisation du bouton "Retard du réseau"
 	var button = document.getElementById("lineDelay") ;
-	// Pas d'animation
-	if (lineDelayOn){ 	
+	// Si animation
+	if (continueLineDelay){        	
 		button.innerHTML = "Retard du réseau" ; 
 		continueLineDelay = false;
-		parametre = false;
+		lineDelayOn=false;
 	}
-	// Animation en cours
+	// Si pas d'animation en cours
 	else{
-		button.innerHTML = "Arr&ecirc;ter l'animation" ;	
-		parametre = true;
+		button.innerHTML = "Arr&ecirc;ter l'animation" ; 
 		continueLineDelay = true;
+		lineDelayOn=true;
 		// On efface tout ce qu'il y a sur la map
 		reset();
-		// On appelle la fonction lineDelay
-		lineDelay();
-	}
+	}	
+	lineDelay();
 }
 
 /* La fonction lineDelay permet d'appeller les autres fonctions */
 function lineDelay() {
-	lineDelayOn = true;
-	continueLineDelay = true;
-	// Création des embouteillages dans le tableau stockage
-	lineDelayMode();
-	// fonction iter permettant d'appuyer plusieurs fois sur le bouton "Retard du réseau"
-	function iter(){
-		if (continueLineDelay) {setTimeout(iter, sleepDelay);}
-		else{
-			lineDelayOn = false;
-			// Efface les traits coloré de la route
-			normalMode();		
-			// Remet les même arrets colorés que l'accueil
+	normalMode();
+	if (!continueLineDelay){
+		lineDelayOn = false;
 			$('#slider-hour-vertical').slider("value", startHour); //should not be useful
 			$( "#startHour" ).val(real2hour(startHour)); //should not be useful
-		}
 	}
-	iter();	
+	else {
+	
+		lineDelayMode();
+	}
 }
  
 // Permet de colorer les routes où il y a des embouteillages
@@ -340,7 +334,7 @@ function lineDelayMode() {
 	}
 }
 
-/* ------------------------------------------- Vue : L'etat du réseau ------------------------------------------ */
+/* ---------------------------------------------------------- Vue : L'etat du réseau -------------------------------------------------------------- */
 
 /* toggleLineMovie est appelé dans le php quand on clique sur le bouton "L'état du réseau" */
 function toggleLineMovie(){
@@ -436,7 +430,7 @@ function colorSubRoute(subRnum, durations){
 	}
 }
 
-/* --------------------------------------- Commun a plusieurs vues ---------------------------------------------- */ 
+/* ----------------------------------------------------- Commun a plusieurs vues -------------------------------------------------------------- */ 
 
 // Fonction permettant d'effacer les traits colorés de la route
 function normalMode(){
