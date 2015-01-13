@@ -271,24 +271,20 @@ function dayMovie(){
 /* ------------------------------------------- Vue : Retard du réseau ------------------------------------------ */
 
 var continueLineDelay = false;
-var lineDelayOn = false;
 
 /* toggleLineDelay est appelé dans le php quand on clique sur le bouton "retard du réseau" */
 function toggleLineDelay(){
-
 	// Initialisation du bouton "Retard du réseau"
 	var button = document.getElementById("lineDelay") ;
 	// Si animation
 	if (continueLineDelay){        	
 		button.innerHTML = "Retard du réseau" ; 
-		continueLineDelay = false;
-		lineDelayOn=false;
-	}
+		continueLineDelay = false;	
+		}
 	// Si pas d'animation en cours
 	else{
 		button.innerHTML = "Arr&ecirc;ter l'animation" ; 
 		continueLineDelay = true;
-		lineDelayOn=true;
 		// On efface tout ce qu'il y a sur la map
 		reset();
 	}	
@@ -299,12 +295,10 @@ function toggleLineDelay(){
 function lineDelay() {
 	normalMode();
 	if (!continueLineDelay){
-		lineDelayOn = false;
 			$('#slider-hour-vertical').slider("value", startHour); //should not be useful
 			$( "#startHour" ).val(real2hour(startHour)); //should not be useful
 	}
 	else {
-	
 		lineDelayMode();
 	}
 }
