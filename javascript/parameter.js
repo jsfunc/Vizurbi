@@ -240,6 +240,7 @@ function changeStartHour(event, ui ){// affects global variable: startHour
 	if (debug_mode) console.log("startHour : "+startHour+"\n");
 	computeShortestPath();
 	if(continueLineDelay){lineDelay();}
+	else if(continueLineMovie){lineMovie();}
 	else {drawAccessible();}
 }
 
@@ -248,6 +249,7 @@ function changeDate(e){// thru readDate, affects global variables: date, weekDay
 	readDate();
 	computeShortestPath();
 	if(continueLineDelay){lineDelay();}
+	else if(continueLineMovie){lineMovie();}
 	else {drawAccessible();}
 }
 

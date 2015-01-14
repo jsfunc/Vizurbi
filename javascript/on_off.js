@@ -3,15 +3,18 @@ activeRouteColor =  "#4f8598";// "#009933";
 inactiveRouteColor = "#a9c5d0";
 activeRouteCheckColor = "#FF9100"; //"#4f8598"; //FFA200";
 inactiveRouteCheckColor = "#a9c5d0";
-var basicMode = true;
-var continueVehicleMovie = true;
-var vehicleMovieOn = false;
-var filmOn=0;
-var	continueLineDelay = false;
-var continueLineMovie = true;
-var lineMovieOn = false;
-var continueVehicleMovie = true;
-var vehicleMovieOn = false;
+
+var basicMode = true; // mode avancé
+
+var continueVehicleMovie = true; // Ballet des bus
+var vehicleMovieOn = false; // Ballet des bus
+
+var filmOn=0; //au fil de la journee
+
+var	continueLineDelay = false; // retard du reseau 
+
+var continueLineMovie = false; // etat du reseau
+
 
 var changer=false;
 var choix=0;
@@ -282,14 +285,13 @@ function dayMovie(){
 }
 /* ------------------------------------------- Vue : Retard du réseau ------------------------------------------ */
 
-var continueLineDelay = false;
-
 /* toggleLineDelay est appelé dans le php quand on clique sur le bouton "retard du réseau" */
 function toggleLineDelay(){
 	// Initialisation du bouton "Retard du réseau"
 	var button = document.getElementById("lineDelay") ;
 	// Si animation
-	if (continueLineDelay){        	
+	if (continueLineDelay){  
+		normalMode();
 		button.innerHTML = "Retard du réseau" ; 
 		continueLineDelay = false;	
 		}
@@ -305,30 +307,29 @@ function toggleLineDelay(){
 
 /* La fonction lineDelay permet d'appeller les autres fonctions */
 function lineDelay() {
-	normalMode();
 	// Initialisation des variables temps
-	//var dt = 0.1/60*50;
-	//var t = startHour;
-	//function iter(){
-		//if (changer) { t=startHour; }
-		//else{
-			//t += dt;
-			//t = t%24;
-			//startHour = t;
-		//}
-		
+	var dt = 1/60;
+	var t = startHour;
+	function iter(){
+		if (changer) { t=startHour; }
+		else{
+			t += dt;
+			t = t%24;
+			startHour = t;
+		}
 		// On l'affiche sur la jauge "Heure de départ"
-		//$( "#startHour" ).val(real2hour(t));
+		$( "#startHour" ).val(real2hour(t));
 		if (continueLineDelay){	
+			normalMode();
 			lineDelayMode();
-			//setTimeout(iter, sleepDelay);
+			setTimeout(iter, sleepDelay);
 		}
 		else {
-			//startHour = t;
 			$('#slider-hour-vertical').slider("value", startHour); //should not be useful
 			$( "#startHour" ).val(real2hour(startHour)); //should not be useful
 		}
-	//}
+	}
+	iter();
 }
  
 // Permet de colorer les routes où il y a des embouteillages
@@ -363,7 +364,7 @@ function toggleLineMovie(){
 	// Initialisation du bouton "L'état du réseau"
 	var button = document.getElementById("lineMovie") ;
 	// Pas d'animation
-	if (lineMovieOn){        	
+	if (continueLineMovie){        	
 		button.innerHTML = "L'état du réseau" ; 
 		continueLineMovie = false;
 	}
@@ -374,13 +375,11 @@ function toggleLineMovie(){
 		// On efface tout ce qu'il y a sur la map
 		reset();
 		// On appelle la fonction lineMovie
-		lineMovie();
-	}	
+	}
+	lineMovie();
 }
 
 function lineMovie(){
-	lineMovieOn = true;
-	continueLineMovie = true;
 	// Initialisation des variables temps
 	var dt = 0.1/60*50;
 	var t = startHour;
@@ -399,7 +398,6 @@ function lineMovie(){
 		colorAllSubRoutes(t);
 		if (continueLineMovie) setTimeout(iter, sleepDelay);
 		else{
-			lineMovieOn = false;
 			// Efface les traits colorés de la route
 			normalMode();
 			startHour = t;
