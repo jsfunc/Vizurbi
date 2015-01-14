@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <!Content-Type: text/html; charset=iso-8859-1>
+<!Vary: Accept-Encoding>
 <html>
 <head>
 
