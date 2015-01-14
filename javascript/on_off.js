@@ -151,7 +151,7 @@ function toggleVehicleMovie(){
 
 function vehicleMovie(){
 	// Toutes les 1 minutes
-	var dt = 0.1/60;
+	var dt = 0.5/60;
 	// Fonction qui permet de boucler sur l'heure (permet l'animation)
 	function iter(){
 		var t = startHour;
@@ -270,7 +270,7 @@ function toggleDayMovie() {
 
 function dayMovie(){
 	// Toutes les 1 minutes
-	var dt = 0.1/60; // toutes les minutes	
+	var dt = 1/60; // toutes les minutes	
 	// Fonction qui permet de boucler sur l'heure (permet l'animation)
 	function iter(){
 		// la variable t recoit l'heure de la jauge
@@ -326,7 +326,7 @@ function toggleLineDelay(){
 /* La fonction lineDelay permet d'appeller les autres fonctions */
 function lineDelay() {
 	// Toutes les 1 minutes
-	var dt = 0.1/60;
+	var dt = 1/60;
 	// Fonction qui permet de boucler sur l'heure (permet l'animation)
 	function iter(){
 		// la variable t recoit l'heure de la jauge
@@ -414,7 +414,7 @@ function toggleLineMovie(){
 
 function lineMovie(){
 	// Toutes les 5 minutes
-	var dt = 0.1/60*50;
+	var dt = 1/60;
 	// Fonction qui permet de boucler sur l'heure (permet l'animation)
 	function iter(){
 		// la variable t recoit l'heure de la jauge
