@@ -13,6 +13,9 @@ var lineMovieOn = false;
 var continueVehicleMovie = true;
 var vehicleMovieOn = false;
 
+var changer=false;
+var choix=0;
+var tempsa=0;
 
 
 
@@ -153,7 +156,12 @@ function vehicleMovie(){
 	continueVehicleMovie = true;
 	var t = startHour;
 	function iter(){
-		t += dt;
+		if (changer) { t=startHour; }
+		else{
+			t += dt;
+			t = t%24;
+			startHour = t;
+		}
 		//if (Math.floor(3600*t) % 60 < 60*dt) $('#slider-hour-vertical').slider("value", t); // too slow, even with the test!
 		$( "#startHour" ).val(real2hour(t));
 		affActiveVehicles(t);
@@ -228,7 +236,6 @@ function affVehicles(subRoute, hour){
 	}
 }
 
-/* Vehicle movie */
 function interpolatePoint(p1, p2, x){ // interpolates between L.latlng p1 and p2 with proportion x 
 	return(new L.LatLng((1-x)*p1.lat+x*p2.lat, (1-x)*p1.lng+x*p2.lng));
 }
@@ -253,8 +260,14 @@ function dayMovie(){
 	continueDayMovie = true;
 	var oldStartHour = startHour;
 	var dt = 1/60; // toutes les minutes	
+	var t = startHour;
 	function iter(){
-		startHour += dt;
+		if (changer) { t=startHour; }
+		else{
+			t += dt;
+			t = t%24;
+			startHour += dt;
+		}
 		//	$('#slider-hour-vertical').slider("value", startHour);
 		$( "#startHour" ).val(real2hour(startHour));
 		computeShortestPath();
@@ -293,13 +306,29 @@ function toggleLineDelay(){
 /* La fonction lineDelay permet d'appeller les autres fonctions */
 function lineDelay() {
 	normalMode();
-	if (!continueLineDelay){
+	// Initialisation des variables temps
+	//var dt = 0.1/60*50;
+	//var t = startHour;
+	//function iter(){
+		//if (changer) { t=startHour; }
+		//else{
+			//t += dt;
+			//t = t%24;
+			//startHour = t;
+		//}
+		
+		// On l'affiche sur la jauge "Heure de départ"
+		//$( "#startHour" ).val(real2hour(t));
+		if (continueLineDelay){	
+			lineDelayMode();
+			//setTimeout(iter, sleepDelay);
+		}
+		else {
+			//startHour = t;
 			$('#slider-hour-vertical').slider("value", startHour); //should not be useful
 			$( "#startHour" ).val(real2hour(startHour)); //should not be useful
-	}
-	else {
-		lineDelayMode();
-	}
+		}
+	//}
 }
  
 // Permet de colorer les routes où il y a des embouteillages
@@ -309,18 +338,18 @@ function lineDelayMode() {
 	var heureActuellePlusCinq = startHour+0.08;
 	for (var i=0; i<subRoutes.length; i++) { // Pour chaque trajet des lignes de bus (1 sens = 1 subRoutes)
 		for (var j=0; j<subRoutes[i].timeTable.length; j++) { // Pour chaque passage de la ligne de bus dans la journée
-			for (var k=0; k<subRoutes[i].timeTable[j].length-1; k++) { // Pour chaque arret de la ligne de bus
-				// Calcul du retard (temps officiel - temps réel) pour l'arret k et l'arret k+1
-				var retardA = subRoutes[i].timeRealTable[j][k] - subRoutes[i].timeTable[j][k];
-				var retardB = subRoutes[i].timeRealTable[j][k+1] - subRoutes[i].timeTable[j][k+1];	
-				
-				// Si le temps réel et le temps officiel sont compris entre + ou - 5 min de l'heure actuelle et que le retard est important
-				if ( ( subRoutes[i].timeRealTable[j][k]>= heureActuelleMoinsCinq) && ( subRoutes[i].timeRealTable[j][k]<= heureActuellePlusCinq)
-					&& ( subRoutes[i].timeRealTable[j][k+1]>= heureActuelleMoinsCinq) && ( subRoutes[i].timeRealTable[j][k+1]<= heureActuellePlusCinq)
-					&&  ((retardB - retardA) >= 0.08) ) {
-					
-					// Si le chemin existe, l'afficher en rouge
-					if(subRoutes[i].subShapes[k]) {subRoutes[i].subShapes[k].setStyle({opacity:1, color:"red"});}
+			if (isOn(services[subRoutes[i].serviceIds[j]],date)) {
+				for (var k=0; k<subRoutes[i].timeTable[j].length-1; k++) { // Pour chaque arret de la ligne de bus
+					// Calcul du retard (temps officiel - temps réel) pour l'arret k et l'arret k+1
+					var retardA = subRoutes[i].timeRealTable[j][k] - subRoutes[i].timeTable[j][k];
+					var retardB = subRoutes[i].timeRealTable[j][k+1] - subRoutes[i].timeTable[j][k+1];					
+					// Si le temps réel et le temps officiel sont compris entre + ou - 5 min de l'heure actuelle et que le retard est important
+					if ( ( subRoutes[i].timeRealTable[j][k]>= heureActuelleMoinsCinq) && ( subRoutes[i].timeRealTable[j][k]<= heureActuellePlusCinq)
+						&& ( subRoutes[i].timeRealTable[j][k+1]>= heureActuelleMoinsCinq) && ( subRoutes[i].timeRealTable[j][k+1]<= heureActuellePlusCinq)
+						&&  ((retardB - retardA) >= 0.08) ) {
+						// Si le chemin existe, l'afficher en rouge
+						if(subRoutes[i].subShapes[k]) {subRoutes[i].subShapes[k].setStyle({opacity:1, color:"red"});}
+					}
 				}
 			}
 		}
@@ -350,10 +379,6 @@ function toggleLineMovie(){
 }
 
 function lineMovie(){
-	// A supprimer apres deplacement et appel des ces fonctions autres parts
-	createSubShapes();
-	computeTimes(); 
-	// -----
 	lineMovieOn = true;
 	continueLineMovie = true;
 	// Initialisation des variables temps
@@ -362,9 +387,12 @@ function lineMovie(){
 	// Coloration de toute les routes à l'instant t
 	colorAllSubRoutes(t);
 	function iter(){
-		// Incrémentation du temps
-		t += dt;
-		t = t%24;
+		if (changer) { t=startHour; }
+		else{
+			t += dt;
+			t = t%24;
+			startHour = t;
+		}
 		// On l'affiche sur la jauge "Heure de départ"
 		$( "#startHour" ).val(real2hour(t));
 		// Coloration de toute les routes au nouvel instant t
@@ -435,3 +463,24 @@ function normalMode(){
 		}
 	} 
 }
+
+/* ----------------------------------------------------- Bouton pause/play -------------------------------------------------------------- */ 
+
+function PlayPause(){
+	var button = document.getElementById("changerv") ;
+	// Si animation
+	if (changer){
+		button.innerHTML = "pause" ;	
+		changer = false;	
+	}
+	// Si pas d'animation en cours
+	else{
+		button.innerHTML = "play" ;
+		changer = true;
+	}	
+	switch(choix) {
+		case 1: lineMovie(); break;
+		case 2: console.log(changer); break;
+	} 
+}
+

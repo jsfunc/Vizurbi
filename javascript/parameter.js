@@ -247,7 +247,8 @@ function changeStartHour(event, ui ){// affects global variable: startHour
 function changeDate(e){// thru readDate, affects global variables: date, weekDay
 	readDate();
 	computeShortestPath();
-	drawAccessible();
+	if(continueLineDelay){lineDelay();}
+	else {drawAccessible();}
 }
 
 function setMapInteractions(){
