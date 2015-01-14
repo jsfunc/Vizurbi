@@ -5,21 +5,11 @@ activeRouteCheckColor = "#FF9100"; //"#4f8598"; //FFA200";
 inactiveRouteCheckColor = "#a9c5d0";
 
 var basicMode = true; // mode avancé
-
-var continueVehicleMovie = true; // Ballet des bus
-var vehicleMovieOn = false; // Ballet des bus
-
-var filmOn=0; //au fil de la journee
-
+var continueVehicleMovie = false; // Ballet des bus
+var continueDayMovie = false; //au fil de la journee
 var	continueLineDelay = false; // retard du reseau 
-
 var continueLineMovie = false; // etat du reseau
-
-
-var changer=false;
-var choix=0;
-var tempsa=0;
-
+var changer=false; // lecture - pause
 
 
 function desactivateUnlinkedStops(){ // a revoir!
@@ -104,13 +94,12 @@ function activateTramwayLines(){
 
 /* ------------------------------------------------------- Réinitialiser ----------------------------------------------------------- */
 
-//Reset stops coloration 
+// Reset stops coloration 
 function reset(){
 	if (debug_mode) var startTime = performance.now();	
 	for(var i=0; i<stops.length; i++) 
 		if (stops[i].isActive) {stops[i].circle.setStyle({fillColor:inactiveNodeColor, fillOpacity:0.5}); }
 	if (debug_mode) console.log("Reset: "+(performance.now()-startTime));
-
 }
 
 /* ---------------------------------------------------- mode avancé / mode simple ------------------------------------------------------ */
@@ -140,43 +129,57 @@ function toggleAdvancedMode(){
 
 /* ------------------------------------------------------ Vue : Le ballet des bus ----------------------------------------------------------- */
 
+/* toggleVehicleMovie est appelé dans le php quand on clique sur le bouton "Le ballet des bus" */
 function toggleVehicleMovie(){
-	var button = document.getElementById("vehicleMovie") ;
-	if (vehicleMovieOn){        	
-		button.innerHTML = "Le ballet des bus" ; 
-		continueVehicleMovie=false;
-	}
-	else{
-		button.innerHTML = "Arr&ecirc;ter le ballet" ; 
-		continueVehicleMovie = true;
-		vehicleMovie();
-	}	
+	// Efface tout ce qu'il y avait sur la map avant
+	reset();
+	normalMode();
+	// Initialisation de toutes les variables de tests des vues à faux
+	// Pour permettre de re-cliquer sur le meme bouton en gardant la vue
+	// Mais aussi de passer d'une vue à l'autre
+	continueVehicleMovie = false; // Ballet des bus
+	continueDayMovie = false; //au fil de la journee
+	continueLineDelay = false; // retard du reseau 
+	continueLineMovie = false; // etat du reseau
+	// Si on doit arreter, 
+	if (continueVehicleMovie){ continueVehicleMovie=false; }
+	// Sinon on continue 
+	else { continueVehicleMovie = true; }
+	// On appelle la fonction vehicleMovie
+	vehicleMovie();
 }
 
 function vehicleMovie(){
+	// Toutes les 1 minutes
 	var dt = 0.1/60;
-	vehicleMovieOn = true;
-	continueVehicleMovie = true;
-	var t = startHour;
+	// Fonction qui permet de boucler sur l'heure (permet l'animation)
 	function iter(){
-		if (changer) { t=startHour; }
-		else{
+		var t = startHour;
+		// Si l'animation est en cours (bouton affiche la possibilité de pause) alors incrementation du temps
+		if (!changer) { 
 			t += dt;
 			t = t%24;
 			startHour = t;
 		}
-		//if (Math.floor(3600*t) % 60 < 60*dt) $('#slider-hour-vertical').slider("value", t); // too slow, even with the test!
+		// Affiche l'heure de départ
 		$( "#startHour" ).val(real2hour(t));
-		affActiveVehicles(t);
-		if (continueVehicleMovie) setTimeout(iter, sleepDelay);
+		// si on doit continuer l'animation
+		if (continueVehicleMovie) { 
+			// appel de la fonction affActiveVehicles en fonction du temps t
+			affActiveVehicles(t);
+			// On relance la fonction iter
+			setTimeout(iter, sleepDelay);
+		}
 		else{
+			// On efface les vehicules (bus)
 			vehicles.clearLayers();
-			vehicleMovieOn = false;
-			startHour = t;
+			// On affiche la valeur dans la jauge
 			$('#slider-hour-vertical').slider("value", startHour); //should not be useful
+			// On affiche l'heure de depart
 			$( "#startHour" ).val(real2hour(startHour)); //should not be useful
 		}
 	}	
+	// Appel de la fonction iter
 	iter();
 }
 
@@ -245,90 +248,114 @@ function interpolatePoint(p1, p2, x){ // interpolates between L.latlng p1 and p2
 
 /* ----------------------------------------------------- Vue : Au fil de la journée ---------------------------------------------------- */
 
+/* toggleDayMovie est appelé dans le php quand on clique sur le bouton "Au fil de la journée" */
 function toggleDayMovie() {
-	var aide = document.getElementById("vid") ;
-	if (filmOn==0){        	
-		aide.innerHTML = "Arr&ecirc;ter l'animation" ; 
-		dayMovie();
-		filmOn=1;
-	}
-	else {
-		aide.innerHTML = "Au fil de la journ&eacute;e" ; 
-		continueDayMovie=false;
-		filmOn=0;
-	}
+	// Efface tout ce qu'il y avait sur la map avant
+	reset();
+	normalMode();
+	// Initialisation de toutes les variables de tests des vues à faux
+	// Pour permettre de re-cliquer sur le meme bouton en gardant la vue
+	// Mais aussi de passer d'une vue à l'autre
+	continueVehicleMovie = false; // Ballet des bus
+	continueDayMovie = false; //au fil de la journee
+	continueLineDelay = false; // retard du reseau 
+	continueLineMovie = false; // etat du reseau
+	// Si on doit arreter, 
+	if (continueDayMovie){ continueDayMovie=false;}
+	// Sinon on continue 
+	else { continueDayMovie=true;}
+	// On appelle la fonction dayMovie
+	dayMovie();
 }
 
 function dayMovie(){
-	continueDayMovie = true;
-	var oldStartHour = startHour;
-	var dt = 1/60; // toutes les minutes	
-	var t = startHour;
+	// Toutes les 1 minutes
+	var dt = 0.1/60; // toutes les minutes	
+	// Fonction qui permet de boucler sur l'heure (permet l'animation)
 	function iter(){
-		if (changer) { t=startHour; }
-		else{
+		// la variable t recoit l'heure de la jauge
+		var t = startHour;
+		// Si l'animation est en cours (bouton affiche la possibilité de pause) alors incrementation du temps
+		if (!changer) { 
 			t += dt;
 			t = t%24;
-			startHour += dt;
+			startHour = t;
 		}
-		//	$('#slider-hour-vertical').slider("value", startHour);
+		// Affiche l'heure de départ
 		$( "#startHour" ).val(real2hour(startHour));
-		computeShortestPath();
-		drawAccessible();			
-		if (startHour<25 && continueDayMovie) setTimeout(iter, sleepDelay); 
-		else $('#slider-hour-vertical').slider("value", startHour);
+		// si on doit continuer l'animation	
+		if (continueDayMovie) { 
+			computeShortestPath();
+			// appel de la fonction pour afficher les points de couleurs
+			drawAccessible();	
+			// On relance la fonction iter
+			setTimeout(iter, sleepDelay); 
+		}
+		else {
+			// On affiche la valeur dans la jauge
+			$('#slider-hour-vertical').slider("value", startHour); //should not be useful
+			// On affiche l'heure de depart
+			$( "#startHour" ).val(real2hour(startHour)); //should not be useful
+		}
 	}
-	iter();
-	startHour = oldStartHour;
-	computeShortestPath();
-	drawAccessible();		
+	// Appel de la fonction iter
+	iter();	
 }
 /* ------------------------------------------- Vue : Retard du réseau ------------------------------------------ */
 
 /* toggleLineDelay est appelé dans le php quand on clique sur le bouton "retard du réseau" */
 function toggleLineDelay(){
-	// Initialisation du bouton "Retard du réseau"
-	var button = document.getElementById("lineDelay") ;
-	// Si animation
-	if (continueLineDelay){  
-		normalMode();
-		button.innerHTML = "Retard du réseau" ; 
-		continueLineDelay = false;	
-		}
-	// Si pas d'animation en cours
-	else{
-		button.innerHTML = "Arr&ecirc;ter l'animation" ; 
-		continueLineDelay = true;
-		// On efface tout ce qu'il y a sur la map
-		reset();
-	}	
+	// Efface tout ce qu'il y avait sur la map avant
+	reset();
+	normalMode();
+	// Initialisation de toutes les variables de tests des vues à faux
+	// Pour permettre de re-cliquer sur le meme bouton en gardant la vue
+	// Mais aussi de passer d'une vue à l'autre
+	continueVehicleMovie = false; // Ballet des bus
+	continueDayMovie = false; //au fil de la journee
+	continueLineDelay = false; // retard du reseau 
+	continueLineMovie = false; // etat du reseau
+	// Si on doit arreter, 
+	if (continueLineDelay){ continueLineDelay = false;}
+	// Sinon on continue 
+	else{ continueLineDelay = true; }	
+	// On appelle la fonction lineDelay
 	lineDelay();
 }
 
 /* La fonction lineDelay permet d'appeller les autres fonctions */
 function lineDelay() {
-	// Initialisation des variables temps
-	var dt = 1/60;
-	var t = startHour;
+	// Toutes les 1 minutes
+	var dt = 0.1/60;
+	// Fonction qui permet de boucler sur l'heure (permet l'animation)
 	function iter(){
-		if (changer) { t=startHour; }
-		else{
+		// la variable t recoit l'heure de la jauge
+		var t = startHour;
+		// Si l'animation est en cours (bouton affiche la possibilité de pause) alors incrementation du temps
+		if (!changer) { 
 			t += dt;
 			t = t%24;
 			startHour = t;
 		}
-		// On l'affiche sur la jauge "Heure de départ"
+		// Affiche l'heure de départ
 		$( "#startHour" ).val(real2hour(t));
+		// si on doit continuer l'animation
 		if (continueLineDelay){	
+			// On efface a chaque changement d'heure les précédents traits rouge
 			normalMode();
+			// Appel de la fonction lineDelayMode
 			lineDelayMode();
+			// On relance la fonction iter
 			setTimeout(iter, sleepDelay);
 		}
 		else {
+			// On affiche la valeur dans la jauge
 			$('#slider-hour-vertical').slider("value", startHour); //should not be useful
+			// On affiche l'heure de depart
 			$( "#startHour" ).val(real2hour(startHour)); //should not be useful
 		}
 	}
+	// Appel de la fonction iter
 	iter();
 }
  
@@ -337,10 +364,14 @@ function lineDelayMode() {
 	// Création des variables + ou - 5 minutes de l'heure actuelle
 	var heureActuelleMoinsCinq = startHour-0.08;
 	var heureActuellePlusCinq = startHour+0.08;
-	for (var i=0; i<subRoutes.length; i++) { // Pour chaque trajet des lignes de bus (1 sens = 1 subRoutes)
-		for (var j=0; j<subRoutes[i].timeTable.length; j++) { // Pour chaque passage de la ligne de bus dans la journée
+	// Pour chaque trajet des lignes de bus (1 sens = 1 subRoutes)
+	for (var i=0; i<subRoutes.length; i++) { 
+		// Pour chaque passage de la ligne de bus dans la journée
+		for (var j=0; j<subRoutes[i].timeTable.length; j++) { 
+			// Si la ligne de bus fonctionne lors de la date renseigné
 			if (isOn(services[subRoutes[i].serviceIds[j]],date)) {
-				for (var k=0; k<subRoutes[i].timeTable[j].length-1; k++) { // Pour chaque arret de la ligne de bus
+				 // Pour chaque arret de la ligne de bus
+				for (var k=0; k<subRoutes[i].timeTable[j].length-1; k++) {
 					// Calcul du retard (temps officiel - temps réel) pour l'arret k et l'arret k+1
 					var retardA = subRoutes[i].timeRealTable[j][k] - subRoutes[i].timeTable[j][k];
 					var retardB = subRoutes[i].timeRealTable[j][k+1] - subRoutes[i].timeTable[j][k+1];					
@@ -349,7 +380,9 @@ function lineDelayMode() {
 						&& ( subRoutes[i].timeRealTable[j][k+1]>= heureActuelleMoinsCinq) && ( subRoutes[i].timeRealTable[j][k+1]<= heureActuellePlusCinq)
 						&&  ((retardB - retardA) >= 0.08) ) {
 						// Si le chemin existe, l'afficher en rouge
-						if(subRoutes[i].subShapes[k]) {subRoutes[i].subShapes[k].setStyle({opacity:1, color:"red"});}
+						if(subRoutes[i].subShapes[k]) {
+							subRoutes[i].subShapes[k].setStyle({opacity:1, color:"red"});
+						}
 					}
 				}
 			}
@@ -361,51 +394,55 @@ function lineDelayMode() {
 
 /* toggleLineMovie est appelé dans le php quand on clique sur le bouton "L'état du réseau" */
 function toggleLineMovie(){
-	// Initialisation du bouton "L'état du réseau"
-	var button = document.getElementById("lineMovie") ;
-	// Pas d'animation
-	if (continueLineMovie){        	
-		button.innerHTML = "L'état du réseau" ; 
-		continueLineMovie = false;
-	}
-	// Animation en cours
-	else{
-		button.innerHTML = "Arr&ecirc;ter l'animation" ; 
-		continueLineMovie = true;
-		// On efface tout ce qu'il y a sur la map
-		reset();
-		// On appelle la fonction lineMovie
-	}
+	// Efface tout ce qu'il y avait sur la map avant
+	reset();
+	normalMode();
+	// Initialisation de toutes les variables de tests des vues à faux
+	// Pour permettre de re-cliquer sur le meme bouton en gardant la vue
+	// Mais aussi de passer d'une vue à l'autre
+	continueVehicleMovie = false; // Ballet des bus
+	continueDayMovie = false; //au fil de la journee
+	continueLineDelay = false; // retard du reseau 
+	continueLineMovie = false; // etat du reseau
+	// Si on doit arreter, 
+	if (continueLineMovie){ continueLineMovie = false; }
+	// Sinon on continue 
+	else { continueLineMovie = true; }
+	// On appelle la fonction lineMovie
 	lineMovie();
 }
 
 function lineMovie(){
-	// Initialisation des variables temps
+	// Toutes les 5 minutes
 	var dt = 0.1/60*50;
-	var t = startHour;
-	// Coloration de toute les routes à l'instant t
-	colorAllSubRoutes(t);
+	// Fonction qui permet de boucler sur l'heure (permet l'animation)
 	function iter(){
-		if (changer) { t=startHour; }
-		else{
+		// la variable t recoit l'heure de la jauge
+		var t = startHour;
+		// Si l'animation est en cours (bouton affiche la possibilité de pause) alors incrementation du temps
+		if (!changer) {
 			t += dt;
 			t = t%24;
 			startHour = t;
 		}
-		// On l'affiche sur la jauge "Heure de départ"
+		// Affiche l'heure de départ
 		$( "#startHour" ).val(real2hour(t));
-		// Coloration de toute les routes au nouvel instant t
-		colorAllSubRoutes(t);
-		if (continueLineMovie) setTimeout(iter, sleepDelay);
-		else{
+		if (continueLineMovie) {
 			// Efface les traits colorés de la route
 			normalMode();
-			startHour = t;
-			// Remet les même arrets colorés que l'accueil
+			// appel de la fonction colorAllSubRoutes
+			colorAllSubRoutes(t);
+			// On relance la fonction iter
+			setTimeout(iter, sleepDelay);
+		}
+		else{
+			// On affiche la valeur dans la jauge
 			$('#slider-hour-vertical').slider("value", startHour); //should not be useful
+			// On affiche l'heure de depart	
 			$( "#startHour" ).val(real2hour(startHour)); //should not be useful
 		}
 	}	
+	// Appel de la fonction iter
 	iter();
 }
 
@@ -423,9 +460,12 @@ function giveTimes(subRnum, hour){
 	var durations	= new Array;
 	var timeMax		= times[times.length-1][nbStops-1];
 	for(var i=0 ; i<times.length ; i++){
-		for(var j=0 ; j<nbStops-1 ; j++){
-			if(!(durations[j]) && (hour >= times[i][j]) && (hour < timeMax)){
-				durations[j] = times[i][j+1]-times[i][j];
+		// Si la ligne de bus fonctionne lors de la date renseigné
+		if (isOn(services[subRoutes[subRnum].serviceIds[i]],date)) {
+			for(var j=0 ; j<nbStops-1 ; j++){
+				if(!(durations[j]) && (hour >= times[i][j]) && (hour < timeMax)){
+					durations[j] = times[i][j+1]-times[i][j];
+				}
 			}
 		}
 	}
@@ -462,8 +502,6 @@ function normalMode(){
 	} 
 }
 
-/* ----------------------------------------------------- Bouton pause/play -------------------------------------------------------------- */ 
-
 function PlayPause(){
 	var button = document.getElementById("changerv") ;
 	// Si animation
@@ -473,12 +511,8 @@ function PlayPause(){
 	}
 	// Si pas d'animation en cours
 	else{
-		button.innerHTML = "play" ;
+		button.innerHTML = "lecture" ;
 		changer = true;
 	}	
-	switch(choix) {
-		case 1: lineMovie(); break;
-		case 2: console.log(changer); break;
-	} 
 }
 
