@@ -45,6 +45,11 @@
 		<script type="text/javascript" src="javascript/math.js"></script>
 		<script type="text/javascript" src="javascript/parameter.js"></script>
 		<script type="text/javascript" src="javascript/toolbox.js"></script>
+		<script type="text/javascript" src="javascript/hull.js"></script>
+		<script type="text/javascript" src="javascript/grid.js"></script>
+		<script type="text/javascript" src="javascript/intersect.js"></script>
+		
+		
 	</head>
 
 	<body id="page">

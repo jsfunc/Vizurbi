@@ -10,7 +10,7 @@ function createMap() {
 	network = new L.LayerGroup();		
 
 	var cmAttr = '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-	cmUrl = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png';
+	cmUrl = 'http://{s}.tile.openstreetmap.se/hydda/full/{z}/{x}/{y}.png';
 
 
 	// Quelques styleId : représentation du fond de la carte: http://maps.cloudmade.com/editor 				
@@ -330,20 +330,53 @@ function affRouteInfo(routeId){
 	lineInfo.update(tt);
 }
 
+// function drawAccessible(){
+	// if (debug_mode) var startTime = performance.now();	
+	// for(var i=0; i<stops.length; i++) if (stops[i].isActive) {
+		// if (arrivalTime[i] < startHour + maxMinute/60){
+			// var myColor = val2color((arrivalTime[i] - startHour)/(maxMinute/59));
+			// stops[i].circle.setStyle({fillColor:myColor, fillOpacity:1}); 
+		// }
+		// else{
+			// stops[i].circle.setStyle({fillColor:inactiveNodeColor, fillOpacity:0.5}); 
+		// }
+	// }
+	// if (debug_mode) console.log("drawAccessible: "+(performance.now()-startTime)+"maxMinute :"+maxMinute+" startHour :"+startHour);
+	// drawAccessibleZones();
+// }
+
+var	polygon_far;
 function drawAccessible(){
 	if (debug_mode) var startTime = performance.now();	
+/**/	var bounds_far = new Array();
+
+/**/		if(map.hasLayer(polygon_far)){
+				map.removeLayer(polygon_far);
+			}
+	
 	for(var i=0; i<stops.length; i++) if (stops[i].isActive) {
 		if (arrivalTime[i] < startHour + maxMinute/60){
 			var myColor = val2color((arrivalTime[i] - startHour)/(maxMinute/59));
-			stops[i].circle.setStyle({fillColor:myColor, fillOpacity:1}); 
+			stops[i].circle.setStyle({fillColor:"#008000"/*myColor/*"#FF000F"*/, fillOpacity:0.5});
+			var radius = (startHour + maxMinute/60 - arrivalTime[i]) *vWalk * 100;
+			if (Math.floor(((arrivalTime[i] - startHour)*60))<=maxMinute){
+/**/			bounds_far.push([stops[i].lat, stops[i].lng]);
+			}
 		}
 		else{
 			stops[i].circle.setStyle({fillColor:inactiveNodeColor, fillOpacity:0.5}); 
 		}
 	}
+		
+/**/	polygon_far = L.polygon(hull(bounds_far, 0.014), {color: 'black', fillOpacity: 0.1, opacity:1,weight: 3,  clickable: false}).addTo(map).bindPopup(""+maxMinute)/*.openPopup()*/;
+
 	if (debug_mode) console.log("drawAccessible: "+(performance.now()-startTime)+"maxMinute :"+maxMinute+" startHour :"+startHour);
 	//drawAccessibleZones();
 }
+
+
+
+
 
 function drawAccessibleZones(){
 	if (debug_mode) var startTime = performance.now();	
