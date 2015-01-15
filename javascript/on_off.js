@@ -47,49 +47,41 @@ function toggleRouteActivity(routeId){
 function disactivateAllLines(){ // change Lines->Routes and php accordingly!
 	for (var i=0; i<routes.length; i++) disactivateRoute(i);
 	computeShortestPath();
-	drawAccessible();
 }
 
 function activateAllLines(){ // change Lines->Routes and php accordingly!
 	for (var i=0; i<routes.length; i++) activateRoute(i);
 	computeShortestPath();
-	drawAccessible();
 }
 
 function disactivateBusLines(){ 
 	for (var i=0; i<routes.length; i++)  if (routes[i].type==3) disactivateRoute(i);
 	computeShortestPath();
-	drawAccessible();
 }
 
 function activateBusLines(){ 
 	for (var i=0; i<routes.length; i++) if (routes[i].type==3) activateRoute(i);
 	computeShortestPath();
-	drawAccessible();
 }
 
 function disactivateSubwayLines(){ 
 	for (var i=0; i<routes.length; i++)  if (routes[i].type==1) disactivateRoute(i);
 	computeShortestPath();
-	drawAccessible();
 }
 
 function activateSubwayLines(){ 
 	for (var i=0; i<routes.length; i++) if (routes[i].type==1) activateRoute(i);
 	computeShortestPath();
-	drawAccessible();
 }
 
 function disactivateTramwayLines(){ 
 	for (var i=0; i<routes.length; i++)  if (routes[i].type==0) disactivateRoute(i);
 	computeShortestPath();
-	drawAccessible();
 }
 
 function activateTramwayLines(){ 
 	for (var i=0; i<routes.length; i++) if (routes[i].type==0) activateRoute(i);
 	computeShortestPath();
-	drawAccessible();
 }
 
 /* ------------------------------------------------------- Réinitialiser ----------------------------------------------------------- */
@@ -261,9 +253,9 @@ function toggleDayMovie() {
 	continueLineDelay = false; // retard du reseau 
 	continueLineMovie = false; // etat du reseau
 	// Si on doit arreter, 
-	if (continueDayMovie){ continueDayMovie=false;}
+	if (continueDayMovie){continueDayMovie=false;}
 	// Sinon on continue 
-	else { continueDayMovie=true;}
+	else {continueDayMovie=true;}
 	// On appelle la fonction dayMovie
 	dayMovie();
 }
@@ -299,7 +291,7 @@ function dayMovie(){
 		}
 	}
 	// Appel de la fonction iter
-	iter();	
+	iter();
 }
 /* ------------------------------------------- Vue : Retard du réseau ------------------------------------------ */
 
@@ -413,7 +405,7 @@ function toggleLineMovie(){
 }
 
 function lineMovie(){
-	// Toutes les 5 minutes
+	// Toutes les 1 minutes
 	var dt = 1/60;
 	// Fonction qui permet de boucler sur l'heure (permet l'animation)
 	function iter(){
@@ -481,8 +473,10 @@ function colorSubRoute(subRnum, durations){
 	for(var i=0 ; i<subS.length ; i++){
 		if(subS[i]){
 			if(durations[i]){
-				if(maxs[i]-mins[i]>0){c = (durations[i]-mins[i])/(maxs[i]-mins[i]);}
-				subS[i].setStyle({opacity:0.6, color:val2color(c)});
+				if(maxs[i]-mins[i]>0){
+					c = (durations[i]-mins[i])/(maxs[i]-mins[i]);
+				}
+				subS[i].setStyle({opacity:0.6, color:val2color(c)});			
 			}
 			else{subS[i].setStyle({opacity:0});	}
 		}

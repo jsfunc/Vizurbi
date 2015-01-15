@@ -183,7 +183,11 @@ function startApp(){
 	computeShortestPath(); // defines global variables: comesFrom
 	computeTimes(); // calculate shortest and longest time between stops
 	createSubShapes();
-	drawAccessible();	
+	drawAccessible();
+	
+	changer = true;
+	toggleDayMovie();
+	
 	map.spin(false);
 }
 
