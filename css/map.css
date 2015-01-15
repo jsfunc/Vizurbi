@@ -46,7 +46,7 @@ h1 {
 }
 
 /* Top navigation space : composed of logo+ city + buttons*/
-#topnav {
+/* #topnav {
 	position: absolute;
 	width: 100%;
 	min-width: 1240px;
@@ -58,32 +58,19 @@ h1 {
 	z-index: 20;
 	display: block;
 	/*background-image:-webkit-gradient(linear,0% 100%,0% 0,color-stop(0.0,#fff),color-stop(0.5,#4D505B));
-	background-image:-moz-linear-gradient(center bottom,#fff 0,#4D505B 50%);*/
+	background-image:-moz-linear-gradient(center bottom,#fff 0,#4D505B 50%);
 	vertical-align: middle;
-}
+} 
 
 #topnav a {
 	text-decoration: none;
-}
+} */
 
 /* absolute positions are relative to the container */
-#logo {
-	position: absolute;
-	width: 160px;
-	height: 60px;
-	line-height: 60px;
-	top: 0px;
-	left: 0px;
-	background: url(../images/logo.png) no-repeat;
-	background-size: auto 60px;
-	padding: 0;
-	margin: 0;
-	text-indent: 100px;
-	display: inline-block;
-	color: #fff;
-}
 
-#city {
+
+/* #city {
+	font-family: Arial,serif;
 	position: absolute;
 	width: 200px;
 	height: 60px;
@@ -93,19 +80,20 @@ h1 {
 	font-size: 16px;
 	float: left;
 	margin: 0px;
-	color: #FE5300;
+	color: #ff8484;
 	display: inline-block;
 	vertical-align: middle;
 }
 .toulouse {
-	background: url(../images/toulouse.jpeg) no-repeat;
+	background: url(../images/img_3332.jpg) no-repeat;
 	background-size: auto 60px;
 	padding: 0;
 	margin: 0;
 	text-indent: 100px;
 	display: inline-block;
-	color: #fff;
+	color: #ddd;
 }
+*/ 
 
 #buttons {
 	position: relative;
@@ -116,14 +104,14 @@ h1 {
 	margin-right:15px;
 	display:inline-block;
 	float:right;
-}
+} 
 
 
 /* Main contains myMap and control */
 #main {
 	position: absolute;
 	left: 0;
-	top: 60px;
+	top: 0;
 	width: 100%;
 	min-width:1200px;
 }
@@ -133,29 +121,58 @@ html, body, #main {
 }
 
 #myMap {
-	width: 78%;
-	height: 90%; /*800px;*/
+	width: 100%;
+	height: 100%; /*800px;*/
 	/*	min-height:800px;*/
 	/*	min-width:960px;*/
 	float: left;
+}
 
+#logo {
+	position: absolute;
+	width: 350px;
+	height: 150px;
+	line-height: 60px;
+	top: 0px;
+	left: 0px;
+	background: url(../images/logohorloge3.png) no-repeat;
+	background-size: auto 135px;
+	padding: 0;
+	margin: 0;
+	text-indent: 100px;
+	display: inline-block;
+	color: #fff;
 }
 
 /* Control contains station + sliders +day+ controladv (controlBoxActiveRoutes + morecontroladv (activeRoutes + animationVelocity)) */
 #control {
-	width: 22%;
+	width: 100%;
 	height: 100%;
 	min-width: 240px;
-	float: right;
+	float: left;
 	/*border:1px solid #4D505B;*/
 }
 
-#station {
+#stationStart{
+	height: 50 px;
+	min-width: 240px;
+	position: absolute;
+	top: 30px;
+}
+
+#stationEnd{
+	height: 50 px;
+	min-width: 240px;
+	position: absolute;
+	top: 90px;
+}
+
+/* #station {
 	height: 50 px;
 	min-width: 240px;
 	position: absolute;
 	top: 10px;
-}
+}*/
 
 #sliders {
 	height: 250px;
@@ -165,7 +182,6 @@ html, body, #main {
 	top: 55px;
 	text-align: center;
 }
-
 
 #sliders label {
 	display: block;
@@ -191,8 +207,7 @@ html, body, #main {
 }
 
 #hourslider {
-	width: 50%;
-	float: right;
+	width: 100px;
 	text-indent: 0px;
 }
 
@@ -201,20 +216,36 @@ html, body, #main {
 	/*background:url(../images/journuit.jpg) no-repeat left bottom;*/
 }
 
-
-
 #day {
 	margin-top: 20px;
 	height: 50 px;
 	min-width: 240px;
 	text-indent: 10px;
 	position: absolute;
-	top: 300px;
 	color: #FF702A;
 	font-weight: bold;
 }
 
+#choixhoraire{
+margin-left : 15px;
+	text-indent: 10px;
+	color: #FF702A;
+	font-weight: bold;
+	margin-top: 180px;
+	height : 20px;
+	min-width : 240px;
+	position : absolute;
+	top : 180 px;
+}
 
+#heure{
+margin-left : 15px;
+	text-indent: 10px;
+	color: #FF702A;
+	font-weight: bold;
+	position : absolute;
+	margin-top : 210px;
+}
 
 #controlboxActiveRoutes {
 	text-align: left;
@@ -247,8 +278,6 @@ html, body, #main {
 	text-indent: 5px;
 }
 
-
-
 #animationVelocity {
 	min-width: 240px;
 	margin-top: 20px;
@@ -265,12 +294,9 @@ html, body, #main {
 	background: #7fb541;
 }
 
-
 /*moreinfo */
 #moreinfo {
-	text-indent: 6px;
 	text-align: justify;
-	margin: 5px;
 }
 
 #moreinfo h3 {
@@ -287,9 +313,6 @@ html, body, #main {
 	list-style-type: square;
 	list-style-position: inside;
 }
-
-
-
 
 /* buttons*/
 .awesome, .awesome:visited {
@@ -378,6 +401,11 @@ html, body, #main {
 	color: #fff;
 }
 
+.orang.awesome:hover {
+	background-color: white;
+	color: black;
+}
+
 .question {
 	background: url(../images/icons/Question.png) no-repeat;
 	background-size: 22px 22px;
@@ -392,7 +420,6 @@ html, body, #main {
 	background: url(../images/icons/Refresh.png) no-repeat;
 	background-size: 22px 22px;
 	padding: 0;
-	margin: 0;
 	display: block;
 }
 
@@ -414,14 +441,14 @@ html, body, #main {
 	display: block;
 }
 
-.video {
+/*.video {
 	background: url(../images/icons/Video.png) no-repeat;
 	background-size: 22px 22px;
 	padding: 0;
 	margin: 0;
 	display: block;
 	text-indent: 30px;
-}
+}*/
 
 .advanced {
 	background: url(../images/icons/next.png) no-repeat;
@@ -526,8 +553,8 @@ html, body, #main {
 	width: 15px;
 	margin: 7.5px;
 	background: #FFFFFF;
-	border: 2px solid #999999;
-	border-radius: 20px;
+	border: 1px solid #999999;
+	border-radius: 10px;
 	position: absolute;
 	top: 0;
 	bottom: 0;
@@ -675,7 +702,7 @@ table.pathDescription th {
 	font-weight: bold;
 }
 
-div.introInfo {
+div.introInfo ,.notif{
 	margin: 300 px;
 	padding: 6px 8px;
 	font: 14px/16px Arial, Helvetica, sans-serif;
@@ -686,8 +713,17 @@ div.introInfo {
 	/*text-indent:0px;*/
 }
 
+div .notif{
+	top: 0px;
+	right: 300px;
+}
 
-div.introInfo h2 {
+div .introInfo {
+	top:0px;
+	left: 300px;
+	}
+
+div.introInfo  h2,.notif h2 {
 	font-size: 200%;
 	/*color: #00D300;*/
 	color: #FE5300;
@@ -695,7 +731,7 @@ div.introInfo h2 {
 	padding-bottom: 0.5em;
 }
 
-div.introInfo h3 {
+div.introInfo h3, .notif h3 {
 	font-size: 150%;
 	/*color: #00D300;*/
 	color: #FE5300;
@@ -703,18 +739,17 @@ div.introInfo h3 {
 	padding-bottom: 1em;
 }
 
-div.introInfo .highlight {
+div.introInfo .highlight, .notif .highlight {
 	color: #FE5300;
 }
 
-div.introInfo ul li {
+div.introInfo ul li, .notif ul li {
 	background-image: url(../images/icons/sqorange.gif);
 	background-repeat: no-repeat;
 	background-position: 12px 4px;
-	padding: 0;
-	padding-bottom: 8px;
 	text-index: 10px;
-}
+	text-indent: 30px;
+} 
 
 div.introInfo .understood, div.introInfo .understood a {
 	text-decoration: none;
@@ -838,7 +873,7 @@ div.introInfo .understood, div.introInfo .understood a {
 .prefix.orange, .postfix.orange {
 	background: #ffb700;
 	background:
-		url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmYjcwMCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZjhjMDAiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+		url(../images/icones/itinéraire1.png);
 	background: -moz-linear-gradient(top, #ffb700 0%, #ff8c00 100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffb700),
 		color-stop(100%, #ff8c00));
@@ -882,3 +917,266 @@ div#ui-datepicker-div {
 	/* just for chrome, should be useless but otherwise, datepicker width pb */
 	text-indent: 0px;
 }
+
+#menu {
+	text-align:center;
+	position: absolute;
+	float: left;
+	top: 150px;
+	left: 5px;
+	background-color: #ffffff;
+	border-radius: 15px 15px;
+	width: 70px;
+	margin-left:10px;
+	padding-left:5px;
+	padding-right:5px;
+	padding-top:5px;
+	padding-bottom:5px;
+	border-color: #ff0000;
+	border-width: 2px;
+	border-style:solid;
+}
+
+#refresh {
+	margin-left: 7px;
+	left: 15px;
+}
+
+
+.zoom:hover > button {
+transform: scale(1.1);
+-ms-transform: scale(1.1);
+-webkit-transform: scale(1.1);
+-o-transform: scale(1.1);
+-moz-transform: scale(1.1);
+}
+
+button,input[type="button"]{
+    border : 0px;
+    -moz-border-radius:7px;
+    -webkit-border-radius:7px;
+     border-radius:7px;
+	 background:none;
+	 cursor: pointer;
+}
+
+li {
+ list-style: none 
+ }
+ 
+ #sousmenuI {
+	text-align: center;
+	position: absolute;
+	top: 50px;
+	left: 50px;
+	width: 300px;
+	height: 200px;
+	background-color: gray;
+}
+
+ #notif {
+	text-align: center;
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	background-color: white;
+	border-radius: 0px 0px;
+	border-color: #ff0000;
+	border-width: 0px;
+	border-style:solid;
+	width : 0px;
+	margin-left:0px;
+	margin-right:0px;
+	padding-left:0px;
+	padding-right:0px;
+	padding-top:0px;
+	padding-bottom:0px;
+}
+	
+#ville{
+	position: absolute;
+	width: 70px;
+	height: 70px;
+	background: url(../images/chgmt_ville.png) no-repeat;
+	right: 75px;
+	top:30px;
+	}
+	
+#inforeseau{
+	position: absolute;
+	width: 70px;
+	height: 70px;
+	background: url(../images/notif.png) no-repeat;
+	right: 10px;
+	top:30px;
+	}
+
+#villes{
+	text-align: center;
+	position: absolute;
+	top: 120px;
+	right: 20px;
+	background-color: white;
+	border-radius: 15px 15px;
+	border-color: #ff0000;
+	border-width: 2px;
+	border-style:solid;
+	width : 100px;
+	margin-left:1px;
+	margin-right:1px;
+	padding-left:5px;
+	padding-right:5px;
+	padding-top:5px;
+	padding-bottom:5px;
+}
+
+#stylesousmenu {
+	text-align: center;
+	position: absolute;
+	top: 50px;
+	left: 100px;
+	background-color: gray;
+	}
+	
+#menuSup {
+	position: absolute;
+	width: 30px;
+	/*height: 100%;
+	min-width: 240px;*/
+	right:15px;
+	top:25px;
+    -moz-border-radius:10px 0;
+    -webkit-border-radius:10px 0;
+    border-radius:10px 0;
+}
+
+#logo,#ville,#menu,#menusup{
+	z-index: 1000; 
+	margin-left : 10px;
+}
+
+
+
+#menuInfoPos {
+	position: absolute;
+	width: 300px;
+	/*height: 70%;
+	/*min-width: 240px;*/
+	left : 0px;
+	top: 0px;
+	background-color: #B5AA9B;
+	border:1px solid #848484;
+    -moz-border-radius:10px 0;
+    -webkit-border-radius:10px 0;
+    border-radius:15px 15px;
+	font: 16px Arial;
+}
+
+#sousmenu1{
+	position: absolute;
+	width: 300px;
+	/*height: 100%;
+	min-width: 240px;*/
+	left : 0px;
+	top: -50px;
+	background-color: #B5AA9B;
+	border:1px solid #848484;
+    -moz-border-radius:10px 0;
+    -webkit-border-radius:10px 0;
+    border-radius:15px 15px;
+	margin-left: auto;
+    margin-right: auto;
+	text-align: center;
+
+}
+	
+#menuInfoHoraire {
+	position: absolute;
+	width: 300px;
+	/*height: 70%;
+	/*min-width: 240px;*/
+	left : 0px;
+	top: 100px;
+	background-color: #B5AA9B;
+	border:1px solid #848484;
+    -moz-border-radius:10px 0;
+    -webkit-border-radius:10px 0;
+    border-radius:15px 15px;
+	font: 16px Arial;
+}
+
+#sousmenu4 {
+	position: absolute;
+	width: 300px;
+	/*height: 70%;
+	/*min-width: 240px;*/
+	left : 0px;
+	top: 200px;
+	background-color: #B5AA9B;
+	border:1px solid #848484;
+    -moz-border-radius:10px 0;
+    -webkit-border-radius:10px 0;
+     border-radius:15px 15px;
+	 text-align: center;
+	 color: #ffffff;
+}
+
+#notifres{
+	text-align: center;
+	position: absolute;
+	top: 120px;
+	right: 20px;
+	background-color: white;
+	border-radius: 15px 15px;
+	border-color: #ff0000;
+	border-width: 2px;
+	border-style:solid;
+	width : 300px;
+	margin-left:1px;
+	margin-right:1px;
+	padding-left:5px;
+	padding-right:5px;
+	padding-top:5px;
+	padding-bottom:5px;
+}
+
+.premiereligne{
+	font-size : 14px;
+	font-family : arial,verdana,sans-serif;
+	text-align : center;
+	font-weight : bold;
+	margin-top: 10px;
+		color: #ffffff;
+}
+
+#reinit{
+margin-bottom: -10px;
+text-align: right;
+}
+
+.styletext{
+	/*margin-top : 5px;
+
+	margin-right : 15px;
+	margin-left : -10px;*/
+	font-size : 14px;
+	font-family : arial,verdana,sans-serif;
+	text-align : center;
+	font-weight : bold;
+	margin-bottom : 5px;
+	/*color : orange*/
+		color: #ffffff;
+}	
+
+.styletext2{
+	margin-top : 10px;
+	margin-bottom : 10px;
+	margin-right : 20px;
+	font-size : 16px;
+	font-family : arial,verdana,sans-serif;
+	margin : 10px;
+	font-weight : bold;
+		color: #ffffff;
+	/*color : orange;*/
+}
+
