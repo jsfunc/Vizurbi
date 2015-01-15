@@ -185,7 +185,7 @@ function startApp(){
 	createSubShapes();
 	drawAccessible();
 	
-	changer=true;
+	animation=true;
 	toggleDayMovie();
 	
 	map.spin(false);

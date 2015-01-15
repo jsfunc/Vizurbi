@@ -197,4 +197,4 @@ var MAX_CONCAVE_ANGLE_COS = Math.cos(90 / (180 / Math.PI)); // angle = 90 deg
 var MIN_SEARCH_BBOX_SIZE = 5;
 var MAX_SEARCH_BBOX_SIZE_PERCENT = 0.8;
 
-module.exports = hull;
+//module.exports = hull;

@@ -73,4 +73,4 @@ function grid(points) {
 
 Grid.CELL_SIZE = 10;
 
-module.exports = grid;
+//module.exports = grid;

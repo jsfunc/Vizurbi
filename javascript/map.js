@@ -4,6 +4,8 @@ activeRouteColor =  "#4f8598";// "#009933";
 inactiveRouteColor = "#a9c5d0";
 highlightRouteColor = "#000"; //"#009933";
 
+var	polygon_far;
+
 /* Create map*/
 function createMap() {
 	if (debug_mode) var startTime = performance.now();
@@ -15,7 +17,7 @@ function createMap() {
 
 	// Quelques styleId : représentation du fond de la carte: http://maps.cloudmade.com/editor 				
 	var minimal   = L.tileLayer(cmUrl, {styleId: 22677, attribution: cmAttr});
-	var toulouse = L.latLng(43.617, 1.450);
+	var toulouse = L.latLng(43.602, 1.441);
 	vehicles = new L.layerGroup();
 
 	map = L.map('myMap', {
@@ -345,7 +347,7 @@ function affRouteInfo(routeId){
 	// drawAccessibleZones();
 // }
 
-var	polygon_far;
+
 function drawAccessible(){
 	if (debug_mode) var startTime = performance.now();	
 /**/	var bounds_far = new Array();
@@ -357,7 +359,7 @@ function drawAccessible(){
 	for(var i=0; i<stops.length; i++) if (stops[i].isActive) {
 		if (arrivalTime[i] < startHour + maxMinute/60){
 			var myColor = val2color((arrivalTime[i] - startHour)/(maxMinute/59));
-			stops[i].circle.setStyle({fillColor:"#008000"/*myColor/*"#FF000F"*/, fillOpacity:0.5});
+			stops[i].circle.setStyle({fillColor:"#FF5411"/*myColor/*"#FF000F"*/, fillOpacity:0.5});
 			var radius = (startHour + maxMinute/60 - arrivalTime[i]) *vWalk * 100;
 			if (Math.floor(((arrivalTime[i] - startHour)*60))<=maxMinute){
 /**/			bounds_far.push([stops[i].lat, stops[i].lng]);
@@ -368,7 +370,7 @@ function drawAccessible(){
 		}
 	}
 		
-/**/	polygon_far = L.polygon(hull(bounds_far, 0.014), {color: 'black', fillOpacity: 0.1, opacity:1,weight: 3,  clickable: false}).addTo(map).bindPopup(""+maxMinute)/*.openPopup()*/;
+/**/	polygon_far = L.polygon(hull(bounds_far, 0.014), {color: "#FFC800", fillOpacity: 0.1, opacity:1,weight: 3,  clickable: false}).addTo(map).bindPopup(""+maxMinute)/*.openPopup()*/;
 
 	if (debug_mode) console.log("drawAccessible: "+(performance.now()-startTime)+"maxMinute :"+maxMinute+" startHour :"+startHour);
 	//drawAccessibleZones();
