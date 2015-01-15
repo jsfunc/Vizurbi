@@ -113,7 +113,7 @@
 							style="border: 0; color: #f6931f; font-weight: bold; width: 100%; text-align: center;">
 						<a class="orange5 awesome"
 					style="float: right" href="javascript:PlayPause();">
-					<span class="video" id="changerv">lecture</span>
+					<span class="video" id="animation">lecture</span>
 				</a>
 						<div id="slider-hour-vertical" style="height: 200px; margin: auto"></div>
 						

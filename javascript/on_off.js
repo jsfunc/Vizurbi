@@ -9,7 +9,7 @@ var continueVehicleMovie = false; // Ballet des bus
 var continueDayMovie = false; //au fil de la journee
 var	continueLineDelay = false; // retard du reseau 
 var continueLineMovie = false; // etat du reseau
-var changer=false; // lecture - pause
+var animation=false; // lecture - pause
 
 
 function desactivateUnlinkedStops(){ // a revoir!
@@ -91,6 +91,7 @@ function reset(){
 	if (debug_mode) var startTime = performance.now();	
 	for(var i=0; i<stops.length; i++) 
 		if (stops[i].isActive) {stops[i].circle.setStyle({fillColor:inactiveNodeColor, fillOpacity:0.5}); }
+	vehicles.clearLayers();
 	if (debug_mode) console.log("Reset: "+(performance.now()-startTime));
 }
 
@@ -129,14 +130,10 @@ function toggleVehicleMovie(){
 	// Initialisation de toutes les variables de tests des vues à faux
 	// Pour permettre de re-cliquer sur le meme bouton en gardant la vue
 	// Mais aussi de passer d'une vue à l'autre
-	continueVehicleMovie = false; // Ballet des bus
+	continueVehicleMovie = true; // Ballet des bus
 	continueDayMovie = false; //au fil de la journee
 	continueLineDelay = false; // retard du reseau 
 	continueLineMovie = false; // etat du reseau
-	// Si on doit arreter, 
-	if (continueVehicleMovie){ continueVehicleMovie=false; }
-	// Sinon on continue 
-	else { continueVehicleMovie = true; }
 	// On appelle la fonction vehicleMovie
 	vehicleMovie();
 }
@@ -148,7 +145,7 @@ function vehicleMovie(){
 	function iter(){
 		var t = startHour;
 		// Si l'animation est en cours (bouton affiche la possibilité de pause) alors incrementation du temps
-		if (!changer) { 
+		if (!animation) { 
 			t += dt;
 			t = t%24;
 			startHour = t;
@@ -159,8 +156,8 @@ function vehicleMovie(){
 		if (continueVehicleMovie) { 
 			// appel de la fonction affActiveVehicles en fonction du temps t
 			affActiveVehicles(t);
-			// On relance la fonction iter
-			setTimeout(iter, sleepDelay);
+			// On relance la fonction iter si le bouton est sur pause
+			if (!animation) setTimeout(iter, sleepDelay);
 		}
 		else{
 			// On efface les vehicules (bus)
@@ -249,13 +246,9 @@ function toggleDayMovie() {
 	// Pour permettre de re-cliquer sur le meme bouton en gardant la vue
 	// Mais aussi de passer d'une vue à l'autre
 	continueVehicleMovie = false; // Ballet des bus
-	continueDayMovie = false; //au fil de la journee
+	continueDayMovie = true; //au fil de la journee
 	continueLineDelay = false; // retard du reseau 
 	continueLineMovie = false; // etat du reseau
-	// Si on doit arreter, 
-	if (continueDayMovie){continueDayMovie=false;}
-	// Sinon on continue 
-	else {continueDayMovie=true;}
 	// On appelle la fonction dayMovie
 	dayMovie();
 }
@@ -268,7 +261,7 @@ function dayMovie(){
 		// la variable t recoit l'heure de la jauge
 		var t = startHour;
 		// Si l'animation est en cours (bouton affiche la possibilité de pause) alors incrementation du temps
-		if (!changer) { 
+		if (!animation) { 
 			t += dt;
 			t = t%24;
 			startHour = t;
@@ -280,8 +273,8 @@ function dayMovie(){
 			computeShortestPath();
 			// appel de la fonction pour afficher les points de couleurs
 			drawAccessible();	
-			// On relance la fonction iter
-			setTimeout(iter, sleepDelay); 
+			// On relance la fonction iter si le bouton est sur pause
+			if (!animation) setTimeout(iter, sleepDelay); 
 		}
 		else {
 			// On affiche la valeur dans la jauge
@@ -305,12 +298,8 @@ function toggleLineDelay(){
 	// Mais aussi de passer d'une vue à l'autre
 	continueVehicleMovie = false; // Ballet des bus
 	continueDayMovie = false; //au fil de la journee
-	continueLineDelay = false; // retard du reseau 
+	continueLineDelay = true; // retard du reseau 
 	continueLineMovie = false; // etat du reseau
-	// Si on doit arreter, 
-	if (continueLineDelay){ continueLineDelay = false;}
-	// Sinon on continue 
-	else{ continueLineDelay = true; }	
 	// On appelle la fonction lineDelay
 	lineDelay();
 }
@@ -324,7 +313,7 @@ function lineDelay() {
 		// la variable t recoit l'heure de la jauge
 		var t = startHour;
 		// Si l'animation est en cours (bouton affiche la possibilité de pause) alors incrementation du temps
-		if (!changer) { 
+		if (!animation) { 
 			t += dt;
 			t = t%24;
 			startHour = t;
@@ -337,8 +326,8 @@ function lineDelay() {
 			normalMode();
 			// Appel de la fonction lineDelayMode
 			lineDelayMode();
-			// On relance la fonction iter
-			setTimeout(iter, sleepDelay);
+			// On relance la fonction iter si le bouton est sur pause
+			if (!animation) setTimeout(iter, sleepDelay);
 		}
 		else {
 			// On affiche la valeur dans la jauge
@@ -395,11 +384,7 @@ function toggleLineMovie(){
 	continueVehicleMovie = false; // Ballet des bus
 	continueDayMovie = false; //au fil de la journee
 	continueLineDelay = false; // retard du reseau 
-	continueLineMovie = false; // etat du reseau
-	// Si on doit arreter, 
-	if (continueLineMovie){ continueLineMovie = false; }
-	// Sinon on continue 
-	else { continueLineMovie = true; }
+	continueLineMovie = true; // etat du reseau
 	// On appelle la fonction lineMovie
 	lineMovie();
 }
@@ -412,7 +397,7 @@ function lineMovie(){
 		// la variable t recoit l'heure de la jauge
 		var t = startHour;
 		// Si l'animation est en cours (bouton affiche la possibilité de pause) alors incrementation du temps
-		if (!changer) {
+		if (!animation) {
 			t += dt;
 			t = t%24;
 			startHour = t;
@@ -424,8 +409,8 @@ function lineMovie(){
 			normalMode();
 			// appel de la fonction colorAllSubRoutes
 			colorAllSubRoutes(t);
-			// On relance la fonction iter
-			setTimeout(iter, sleepDelay);
+			// On relance la fonction iter si le bouton est sur pause
+			if (!animation) setTimeout(iter, sleepDelay);
 		}
 		else{
 			// On affiche la valeur dans la jauge
@@ -497,16 +482,20 @@ function normalMode(){
 }
 
 function PlayPause(){
-	var button = document.getElementById("changerv") ;
+	var button = document.getElementById("animation") ;
 	// Si animation
-	if (changer){
+	if (animation){
 		button.innerHTML = "pause" ;	
-		changer = false;	
+		animation = false;	
+		if (continueDayMovie) {toggleDayMovie();}
+		else if (continueVehicleMovie) {toggleVehicleMovie();}
+		else if (continueLineDelay) {toggleLineDelay();}
+		else if (continueLineMovie) {toggleLineMovie();}
 	}
 	// Si pas d'animation en cours
 	else{
 		button.innerHTML = "lecture" ;
-		changer = true;
+		animation = true;
 	}	
 }
 

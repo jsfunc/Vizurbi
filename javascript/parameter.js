@@ -185,7 +185,7 @@ function startApp(){
 	createSubShapes();
 	drawAccessible();
 	
-	changer = true;
+	animation = true;
 	toggleDayMovie();
 	
 	map.spin(false);
@@ -243,12 +243,20 @@ function changeStartHour(event, ui ){// affects global variable: startHour
 	$( "#startHour" ).val(real2hour(startHour)); 
 	if (debug_mode) console.log("startHour : "+startHour+"\n");
 	computeShortestPath();
+	if (continueDayMovie) {toggleDayMovie();}
+	else if (continueVehicleMovie) {toggleVehicleMovie();}
+	else if (continueLineDelay) {toggleLineDelay();}
+	else if (continueLineMovie) {toggleLineMovie();}
 }
 
 
 function changeDate(e){// thru readDate, affects global variables: date, weekDay
 	readDate();
 	computeShortestPath();
+	if (continueDayMovie) {toggleDayMovie();}
+	else if (continueVehicleMovie) {toggleVehicleMovie();}
+	else if (continueLineDelay) {toggleLineDelay();}
+	else if (continueLineMovie) {toggleLineMovie();}
 }
 
 function setMapInteractions(){
