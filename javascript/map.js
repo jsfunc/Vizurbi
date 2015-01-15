@@ -58,7 +58,7 @@ function createMap() {
 		notif.onAdd = function (map) {
 			var mydiv = L.DomUtil.create('div', 'notif'); 
 			var tt = "<img src=\"images/notif.png\">";
-			tt = tt + "<a  href=# onClick='notif.removeFrom(map);' style=\"position:absolute; right:0px;\"><img src=\"images/icons/close.png\" width=\"30px\" /></a></h2>";
+			tt = tt + "<a  href=# onClick='notif.removeFrom(map);' style=\"position:absolute; right:10px;\"><img src=\"images/icons/close.png\" width=\"30px\" /></a></h2>";
 			tt = tt + "<h2>Infos réseau</h2>";
 			tt=tt+"<object data=\"./Alert/technicalIncident.txt\"/>";
 			mydiv.innerHTML = tt;
@@ -66,7 +66,7 @@ function createMap() {
 		}
 	notif.addTo(map);
 	
-	if (getCookie("mode") == "advanced") toggleAdvancedMode();
+	//if (getCookie("mode") == "advanced") toggleAdvancedMode();
 
 	if (debug_mode) console.log("createMap: "+(performance.now()-startTime));
 	affStops();
@@ -121,6 +121,22 @@ function createSubRoutes(){
 	affRoutes();
 }
 
+// Cette fonction permet de créer la caractéristique subShapes de subRoutes
+// subShapes est le chemin reliant deux arrets qu'on peut colorier par la suite
+function createSubShapes(){
+	for(var i=0; i<subRoutes.length; i++){
+		var sub = new Array;
+		for(var j=0; j<subRoutes[i].stops.length-1; j++){
+			if (stops[subRoutes[i].stops[j]] && stops[subRoutes[i].stops[j+1]]) {
+				var stop1 = stops[subRoutes[i].stops[j]].subRoutes[i].posInShape;
+				var stop2 = stops[subRoutes[i].stops[j+1]].subRoutes[i].posInShape;
+				sub[j] = L.polyline(shapes[subRoutes[i].shapeId].stops.slice(stop1,stop2-1), {color:'white', opacity:0, fillOpacity:0, clickable: false}).addTo(map);
+			}
+		}
+		subRoutes[i].subShapes = sub;
+	}
+	if (debug_mode) console.log("createSubShapes finished!\n");
+}
 
 /* Create leaflet objects */
 var _affStopsCounter = 0; 
@@ -340,17 +356,30 @@ function affRouteInfo(routeId){
 	lineInfo.update(tt);
 }
 
+var	polygon_far;
 function drawAccessible(){
-	if (debug_mode) var startTime = performance.now();	
+	if (debug_mode) var startTime = performance.now();
+/**/var bounds_far = new Array();
+/**///if(map.hasLayer(polygon_far)){
+	//	 map.removeLayer(polygon_far);
+	//}
+	if (polygon_far) polygon_far.setStyle({fillOpacity: 0, opacity:0});
 	for(var i=0; i<stops.length; i++) if (stops[i].isActive) {
 		if (arrivalTime[i] < startHour + maxMinute/60){
 			var myColor = val2color((arrivalTime[i] - startHour)/(maxMinute/59));
-			stops[i].circle.setStyle({fillColor:myColor, fillOpacity:1}); 
+			stops[i].circle.setStyle({fillColor:"black"/*myColor/*"#FF000F"*/, fillOpacity:0.5});
+			var radius = (startHour + maxMinute/60 - arrivalTime[i]) *vWalk * 100;
+			if (Math.floor(((arrivalTime[i] - startHour)*60))<=maxMinute){
+/**/			bounds_far.push([stops[i].lat, stops[i].lng]);
+			}
 		}
 		else{
 			stops[i].circle.setStyle({fillColor:inactiveNodeColor, fillOpacity:0.5}); 
 		}
 	}
+	
+/**/polygon_far = L.polygon(hull(bounds_far, 0.011), {color: 'red', fillOpacity: 0.1, opacity:1,weight: 3,  clickable: false}).addTo(map).bindPopup(""+maxMinute)/*.openPopup()*/;
+	
 	if (debug_mode) console.log("drawAccessible: "+(performance.now()-startTime)+"maxMinute :"+maxMinute+" startHour :"+startHour);
 	//drawAccessibleZones();
 }

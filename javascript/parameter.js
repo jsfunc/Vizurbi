@@ -11,7 +11,7 @@ function createControls(){
 
 
 	$("#slider-minute-vertical").slider({
-		orientation: "vertical",
+		orientation: "horizontal",
 		range: "min",
 		min: 1,
 		max: 75,
@@ -28,7 +28,7 @@ function createControls(){
 
 
 	$( "#slider-hour-vertical" ).slider({
-		orientation: "vertical",
+		orientation: "horizontal",
 		range: "min",
 		min: 2,
 		max: 25.5,
@@ -76,6 +76,38 @@ function createControls(){
 	 */
 
 	$("#startStation").autocomplete({
+		source: tags, //Object.keys(stopName2id),
+		select: function( event, ui ) {
+			changeStartId(stopName2id[ui.item.value]);
+		},
+		/*	response: function( event, ui ) { // TO BE REMOVED
+			//if (ui.content.length<20) 
+			for (var k=0; k<ui.content.length; k++){
+				stops[stopName2id[ui.content[k].value]].circle.setStyle({fillColor: "#CC0099", fillOpacity:0.8});
+			}
+		},*/
+		focus: function( event, ui ){
+			stops[stopName2id[ui.item.value]].circle.openPopup();
+		}
+	});
+	
+	$("#startStation2").autocomplete({
+		source: tags, //Object.keys(stopName2id),
+		select: function( event, ui ) {
+			changeStartId(stopName2id[ui.item.value]);
+		},
+		/*	response: function( event, ui ) { // TO BE REMOVED
+			//if (ui.content.length<20) 
+			for (var k=0; k<ui.content.length; k++){
+				stops[stopName2id[ui.content[k].value]].circle.setStyle({fillColor: "#CC0099", fillOpacity:0.8});
+			}
+		},*/
+		focus: function( event, ui ){
+			stops[stopName2id[ui.item.value]].circle.openPopup();
+		}
+	});
+
+	$("#endStation").autocomplete({
 		source: tags, //Object.keys(stopName2id),
 		select: function( event, ui ) {
 			changeStartId(stopName2id[ui.item.value]);
@@ -191,24 +223,6 @@ function startApp(){
 	map.spin(false);
 }
 
-// Cette fonction permet de créer la caractéristique subShapes de subRoutes
-// subShapes est le chemin reliant deux arrets qu'on peut colorier par la suite
-function createSubShapes(){
-	for(var i=0; i<subRoutes.length; i++){
-		var sub = new Array;
-		for(var j=0; j<subRoutes[i].stops.length-1; j++){
-			if (stops[subRoutes[i].stops[j]] && stops[subRoutes[i].stops[j+1]]) {
-				var stop1 = stops[subRoutes[i].stops[j]].subRoutes[i].posInShape;
-				var stop2 = stops[subRoutes[i].stops[j+1]].subRoutes[i].posInShape;
-				sub[j] = L.polyline(shapes[subRoutes[i].shapeId].stops.slice(stop1,stop2-1), {color:'white', opacity:0, fillOpacity:0, clickable: false}).addTo(map);
-			}
-		}
-		subRoutes[i].subShapes = sub;
-	}
-	if (debug_mode) console.log("createSubShapes finished!\n");
-}
-
-
 function computeTimes(){
 	for(var i=0; i<subRoutes.length; i++){
 		//just current day or all services ?
@@ -252,7 +266,6 @@ function changeStartHour(event, ui ){// affects global variable: startHour
 
 function changeDate(e){// thru readDate, affects global variables: date, weekDay
 	readDate();
-	computeShortestPath();
 	if (continueDayMovie) {toggleDayMovie();}
 	else if (continueVehicleMovie) {toggleVehicleMovie();}
 	else if (continueLineDelay) {toggleLineDelay();}
@@ -283,7 +296,7 @@ function setMapInteractions(){
 	};	
 	lineInfo.update = function(msg) {
 
-		divLine.innerHTML = msg || 'Clic droit pour avoir les horaires de la ligne ou le passage au stop';
+		divLine.innerHTML = msg || 'Clic droit pour avoir les horaires <br/> de la ligne ou le passage au stop';
 	};
 
 	lineInfo.addTo(map);
@@ -332,3 +345,18 @@ function changeAnimationVelocity(event, ui){
 	sleepDelay = 1000*Math.exp(-5/100*Number(ui.value));//$('#slider-animation-velocity').slider("value")));
 	if (debug_mode) console.log("sleepDelay : "+sleepDelay+"\n");
 }
+
+
+//<![CDATA[
+        function cocher(){
+          var v = document.getElementsByName('list[]');
+          if(document.getElementById("cocher_tout").checked == true){
+             for (i=0;i<v.length;i++){document.getElementById("list"+i).checked = true;}
+          }
+          else{
+             for (i=0;i<v.length;i++){document.getElementById("list"+i).checked = false;}
+          }
+        }
+    //]]>
+	
+

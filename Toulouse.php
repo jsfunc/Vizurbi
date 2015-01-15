@@ -2,10 +2,8 @@
 <html>
 	<head>
 		<title>Vizurbi!</title>
-		
 		<meta charset="utf-8" />
 		<meta name="Description" content="Tisseo Université Paul Sabatier UPS Open Data" />
-
 		<!-- reset all styles. Usefull before applying several stylesheets  -->
 		<link rel="stylesheet" type="text/css" href="css/reset.css" />
 		<!-- Useful for the datepicker -->
@@ -14,8 +12,6 @@
 		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
 		<!-- All other styles -->
 		<link rel="stylesheet" type="text/css" href="css/map.css" />
-
-		
 		<script type="text/javascript" src="javascript/jquery-2.1.1.min.js"></script>
 		<script type="text/javascript" src="javascript/jquery-ui.js"></script>
 		<script type="text/javascript" src="javascript/leaflet.js"></script>
@@ -35,7 +31,6 @@
 		<!-- Add fancyBox, modal window -->
 		<link rel="stylesheet"	href="plugins/fancybox/jquery.fancybox.css?v=2.1.5" type="text/css"	media="screen" />
 		<script type="text/javascript"	src="plugins/fancybox/jquery.fancybox.pack.js?v=2.1.5"></script>
-
 		<!-- <script type="text/javascript" src="javascript/carto.js"></script>-->
 		<script type="text/javascript" src="javascript/loading.js"></script>
 		<script type="text/javascript" src="javascript/on_off.js"></script>
@@ -43,6 +38,9 @@
 		<script type="text/javascript" src="javascript/math.js"></script>
 		<script type="text/javascript" src="javascript/parameter.js"></script>
 		<script type="text/javascript" src="javascript/toolbox.js"></script>
+		<script type="text/javascript" src="javascript/hull.js"></script>
+		<script type="text/javascript" src="javascript/grid.js"></script>
+		<script type="text/javascript" src="javascript/intersect.js"></script>
 		
 		<script type="text/javascript">
 			if (document.getElementById){
@@ -52,17 +50,15 @@
 			}
 			function menu(obj){
 				if(document.getElementById){
-				var el = document.getElementById(obj);
-				var ar = document.getElementById("menu").getElementsByTagName("ol");
+					var el = document.getElementById(obj);
+					var ar = document.getElementById("menu").getElementsByTagName("ol");
 					if(el.style.display != "block"){
 						for (var i=0; i<ar.length; i++){
-							if (ar[i].className=="sousmenu")
-							ar[i].style.display = "none";
+							if (ar[i].className=="sousmenu") ar[i].style.display = "none";
 						}
 						el.style.display = "block";
-					}else{
-						el.style.display = "none";
 					}
+					else el.style.display = "none";
 				}
 			}
 			function showmenu(menu) {
@@ -86,14 +82,14 @@
 							</div>
 						</td>
 					</tr>
-					<tr>
+					<!--<tr>
 						<td>
 							<div class="zoom">
 								<button title="Obtenir des informations sur votre position" onclick="menu('menuInfoPos');"> 
 								<img id="infopos" src="./images/infospos.png" alt="Infos position" />
 							</div>
 						</td>
-					</tr>
+					</tr>-->
 					<tr>
 						<td>
 							<div class="zoom">
@@ -120,69 +116,96 @@
 					</tr>
 					<tr>
 						<td>
-							<div class="zoom">
-								
+							<div class="zoom" >
 								<a href="javascript:window.location.reload()">
-								<img  src="./images/refresh.png" alt="Réinitialiser"  />
+								<img  style="margin-left:9px" src="./images/refresh.png" alt="Réinitialiser"  title="Réinitialiser" />
 							</div>
 						</td>
 					</tr>		
 				</table>
+				<div id = "lignes">
+				<div id="activeRoutes" style="display:none;" ></div>
+				</div>
 				<div id = "stylesousmenu">
 					<ol>
 						<li>
 							<ol class="sousmenu"  id="sousmenu1">
-							<li class="premiereligne"> Départ :	</li> <br/>
-							<li class="styletext"> <input id="..." type="text" placeholder="Arrêt, adresse, PI..." class="ppfix pre marker black"/> </li> <br/>
-							<li class="styletext"> Arrivée : </li> <br/>
-							<li class="styletext"> <input type="text" placeholder="Arrêt, adresse, PI..." class="ppfix pre marker black" /> </li>  <br/>
-							<li class="styletext"> Date : <input type="date" id="datepicker"/> </li> <br/>
-							<li class="styletext"> 
-								<input type= "radio" name="iti" checked> Partir à 
-								<input type= "radio" name="iti"> Arriver à 
-							</li> <br/>
-							<li class="styletext"> 
-								<input type="number" name="heure" min="0" max="24" value="12" style="width:20%; color : #000000; text-align:center"/> h
-								<input type="number" name="minutes" min="0" max="60" value="00" style="width: 20%; color : #000000; text-align:center"/> min
-							</li><br/>
-							<li class="styletext"> Temps de trajet : <input type="range"/> </li><br/>
-							<li class="styletext"> Sélectionnez les lignes actives: </li><br/>
-							<li class="styletext">
-								<input type="checkbox" name="choix1" value="1"> Bus
-								<input type="checkbox" name="choix2" value="2"> Metro
-								<input type="checkbox" name="choix3" value="3"> Tramway
-								<input type="checkbox" name="choix4" value="4"> Toutes
-							</li>
-							<li class="styletext"> 
-								<div class="zoom">
-									<img src="./images/rafraichir.png" id="reinit" />
-								</div>
-							</li><br/>
+								<form>
+									<li class="premiereligne"> Départ :	</li> <br/>
+									<li class="styletext"> <input id="startStation" type="text" placeholder="Arrêt, adresse, PI..." class="ppfix pre marker black"/> </li> <br/><br/>
+									<li class="styletext"> Sélectionnez les lignes actives: </li><br/>
+									<li class="styletext">
+										<div id="routes">
+											<div style="width: 240px; height: 30px; text-indent: 10px; font-weight: normal; ">
+												Toutes:
+												<div class="onoffswitch" style="float: right">
+													<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked="checked" onload="activateAllLines()" 
+													onclick="if (this.checked){
+														activateAllLines();
+														document.getElementById('myonoffswitchbus').checked = true;
+														document.getElementById('myonoffswitchmetro').checked = true;
+														document.getElementById('myonoffswitchtram').checked = true;
+													}
+													else{
+														disactivateAllLines();
+														document.getElementById('myonoffswitchbus').checked = false;
+														document.getElementById('myonoffswitchmetro').checked = false;
+														document.getElementById('myonoffswitchtram').checked = false;
+													 }" /> 
+													 <label class="onoffswitch-label" for="myonoffswitch">
+														<div class="onoffswitch-inner"></div>
+														<div class="onoffswitch-switch"></div>
+													</label>
+												</div>
+											</div>
+											<div style="width: 240px; height: 30px; text-indent: 10px; font-weight: normal;">
+												Bus:
+												<div class="onoffswitch" style="float: right">
+													<input type="checkbox" name="onoffswitchbus" class="onoffswitch-checkbox" id="myonoffswitchbus" checked="checked" onload="activateBusLines()" onclick="this.checked ? activateBusLines(): disactivateBusLines()" />
+													<label class="onoffswitch-label" for="myonoffswitchbus">
+														<div class="onoffswitch-inner"></div>
+														<div class="onoffswitch-switch"></div>
+													</label>
+												</div>
+											</div>
+											<div style="width: 240px; height: 30px; text-indent: 10px; font-weight: normal;">
+												Metro:
+												<div class="onoffswitch" style="float: right">
+													<input type="checkbox" name="onoffswitchmetro" class="onoffswitch-checkbox" id="myonoffswitchmetro" checked="checked" onload="activateSubWayLines()" onclick="this.checked ? activateSubwayLines(): disactivateSubwayLines()" />
+													<label class="onoffswitch-label" for="myonoffswitchmetro">
+														<div class="onoffswitch-inner"></div>
+														<div class="onoffswitch-switch"></div>
+													</label>
+												</div>
+											</div>
+											<div style="width: 240px; height: 30px; text-indent: 10px; font-weight: normal;">
+												Tramway:
+												<div class="onoffswitch" style="float: right">
+													<input type="checkbox" name="onoffswitchtram" class="onoffswitch-checkbox" id="myonoffswitchtram" checked="checked" onload="activateTramwayLines()" onclick="this.checked ? activateTramwayLines(): disactivateTramwayLines()" />
+													<label class="onoffswitch-label" for="myonoffswitchtram">
+														<div class="onoffswitch-inner"></div>
+														<div class="onoffswitch-switch"></div>
+													</label>
+												</div>
+											</div>
+									</li><br/>
+									<li>
+										<input class = "styletext" style="margin-left:60px" type="button" value="Activer / désactiver les lignes" onclick="showmenu(document.getElementById('activeRoutes'));" href  /><br/>
+									</li><br/>
+									<li class="styletext"> 
+										<div class="zoom">
+											<button style="margin-left:120px" onClick="this.form.reset();" title="Réinitialiser" ><img src="./images/rafraichir.png" id="reinit" alt="réinitialiser" ></button>
+										</div>
+									</li><br/>
+							   </form>
 						  </ol>
 						</li>
 						<li>
-							<ol class="sousmenu" id="menuInfoPos">
-								<li class="premiereligne"> Arrêts situés à moins de : </li><br/>
-								<li class="styletext"> 
-									<input type = "number" min ="0" max="30" value="10" style="border: 0; color: #B5AA9B; font-weight: bold; width: 20%; text-align: center;"/> min
-								</li><br/>
-								<li class="styletext">
-									De : Ma position <input type="radio" name="identifieur" value="true" checked/>  
-									Adresse <input type="radio" name="identifieur" value="false"/>
-								</li><br/>
-								<li class="styletext">
-									<input id="startStation" type="text" placeholder="Adresse...." class="ppfix pre marker black" />
-								</li><br/>
-								<li class="styletext"> <input type ="submit" value="Recherche"/> </li>
-							</ol>
-						</li>
-						<li>
 							<ol class="sousmenu" id="menuInfoHoraire">
-								<li class="premiereligne"> Informations horaires </li><br/>
 								<li class="premiereligne"> Choix de l'arrêt: </li><br/>
 								<li class="styletext"> 
 									<!-- <input id="form_arret" type="text" class="styletext2" name="arret"/> -->
-									<input type="text" placeholder="Nom de l'arret..." /> 
+									<input id="startStation" type="text" placeholder="Nom de l'arret" class="ppfix pre marker black"/>
 								</li><br/>
 								<li class="styletext">
 									Ou choisir ligne :
@@ -280,29 +303,32 @@
 						</li>
 						<li>
 							<ol class="sousmenu" id="sousmenu4"><br/>
-								<li class="styletext"> <a href="javascript:toggleVehicleMovie();"> Ballet des bus  </a></li><br/>
+								<li class="styletext"> <a href="javascript:toggleVehicleMovie();">Ballet des bus  </a></li><br/>
 								<li class="styletext" > <a href="javascript:toggleDayMovie();">	Au fil de la journée </a></li><br/>
 								<li class="styletext"> <a href="javascript:toggleLineMovie();"> Etat du réseau  </a></li><br/>
 								<li class="styletext"> <a href="javascript:toggleLineDelay();"> Retard du réseau  </a></li><br/>
-								<div id="hourslider" style="margin-left:100px">
-									<label for="startHour">Heure de départ <br/></label> <input type="text" id="startHour"
-									style="border: 0; color: #f6931f; font-weight: bold; width: 100%; text-align: center;"/> 
-									<br/><br/><br/>		
-								</div>
-								<div id="slider-hour-vertical" style="height:10px; width:200px; margin-left:40px"></div>
-								<br/><br/>
-								<a class="orang awesome" href="javascript:PlayPause();"> 	<span class="video" id="changerv">lecture</span></a>
+								<a class="orang awesome" href="javascript:PlayPause();"> 	<span class="video" id="animation">lecture</span></a>
 								<br/><br/><br/>
 							</ol>
 						</li>
 					</ol>
 				</div>
 			</div>
+			<div id="menuSlide">
+				<br/>
+				Temps de trajet : <input type="texte" id="maxMinute" style="border: 0; color: gray; font-weight: bold; width: 100px; text-align: center;">	<br/><br/>		
+				<div id="slider-minute-vertical" style="height: 10px; width:200px; margin-left:40px"></div><br/><br/>
+				Date : <input type="text" id="datepicker" /></br></br>
+				Partir à : <input type="texte" name="startHour" id="startHour" style="border: 0; color: gray; font-weight: bold; width: 100px; text-align: center;"></br>
+				<!--<input type="text" name="startHour" id="startHour" style="width: 20%; color: #000000; text-align: center" />--></li><br/>
+				<div id="slider-hour-vertical" style="height:10px; width:200px; margin-left:40px"></div>
+			</div>
 			<div id="menuSup">
 				<input id="ville" type="button"  title="Changer de ville" onclick="showmenu(document.getElementById('villes'));"/>
-				<ul style="display:none;" id="villes" > 
+				<ul style="display:none;" id="villes"> 
 					<li> Toulouse </li> <br/>
-					<li> Angers </li> <br/>
+					<li> Nantes </li> <br/>
+					<li> Metz </li> <br/>
 					<li> Lille </li> <br/>
 				</ul>
 				<input type="button" title="Afficher les infos réseau" onclick="showmenu(document.getElementById('notifres'));" id="inforeseau"/>
@@ -401,111 +427,5 @@
 					$(".fancybox").fancybox();
 				});
 		</script>
-		<div id="control" style="display:none;">
-			<div id="stationStart">
-				<input id="startStation" type="text" placeholder="Départ" class="ppfix pre marker green" />
-			</div>
-			<div id="stationEnd">
-				<input id="endStation" type="text" placeholder="Arrivée" class="ppfix pre marker green" />	
-			</div>
-			<div id="day">
-				Date: <input type="text" id="datepicker" />
-			</div>
-			<div id ="choixhoraire">
-				<input type="radio" name="identifieur" value="true" checked/>Partir à     
-				<input type="radio" name="identifieur" value="false"/>Arriver  à
-			</div>
-			<div id="heure">
-				<input type="number" name="heure" min="0" max="24" value="12" style="color : #f6931f; text-align:center"/> h
-				<input type="number" name="minutes" min="0" max="60" value="00" style="color : #f6931f; text-align:center"/> min
-			</div>
-			<div id="sliders">
-				<div id="timeslider">
-					<label for="maxMinute">	Temps de trajet : 
-						<input type="number" id="maxMinute2" name="minutes2" min="0" max="120" step ="5" value="00" style="border: 0; color: #f6931f; font-weight: bold; width: 30%; text-align: center;"/> min
-					</label> 
-					<input type="texte" id="maxMinute" style="border: 0; color: #f6931f; font-weight: bold; width: 100%; text-align: center;"/>			
-					<div id="slider-minute-vertical"style="height: 10px; margin: 20px;"></div>
-				</div>
-			</div>	
-	<!--	<div id="hourslider">
-				<label for="startHour"> Heure de départ </label> 
-				<input type="text" 	id="startHour" style="border: 0; color: #f6931f; font-weight: bold; width: 100%; text-align: center;"/>
-				<div id="slider-hour-vertical" style="height: 10px; margin: auto"></div>
-			</div>
-	-->
-			<div id="controladv" style="display: none;">
-				<div id="controlboxActiveRoutes">
-					<div id="routes">
-						Moyens de Transports: <br/>
-						<div style="width: 240px; height: 30px; text-indent: 10px; font-weight: normal;">
-							Tous
-							<div class="onoffswitch" style="float: right">
-								<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked="checked" onload="activateAllLines()" 
-								onclick="if (this.checked){
-									activateAllLines();
-									document.getElementById('myonoffswitchbus').checked = true;
-									document.getElementById('myonoffswitchmetro').checked = true;
-									document.getElementById('myonoffswitchtram').checked = true;
-								}
-								else {
-									disactivateAllLines();
-									document.getElementById('myonoffswitchbus').checked = false;
-									document.getElementById('myonoffswitchmetro').checked = false;
-									document.getElementById('myonoffswitchtram').checked = false;
-								}" /> 
-								<label class="onoffswitch-label" for="myonoffswitch">
-									<div class="onoffswitch-inner"></div>
-									<div class="onoffswitch-switch"></div>
-								</label>
-							</div>
-						</div>
-						<div style="width: 240px; height: 30px; text-indent: 10px; font-weight: normal;">
-							Bus
-							<div class="onoffswitch" style="float: right">
-								<input type="checkbox" name="onoffswitchbus" class="onoffswitch-checkbox" id="myonoffswitchbus" checked="checked" onload="activateBusLines()" onclick="this.checked ? activateBusLines(): disactivateBusLines()" />
-								<label class="onoffswitch-label" for="myonoffswitchbus">
-									<div class="onoffswitch-inner"></div>
-									<div class="onoffswitch-switch"></div>
-								</label>
-							</div>
-						</div>
-						<div style="width: 240px; height: 30px; text-indent: 10px; font-weight: normal;">
-							Metro
-							<div class="onoffswitch" style="float: right">
-								<input type="checkbox" name="onoffswitchmetro" class="onoffswitch-checkbox" id="myonoffswitchmetro" checked="checked" onload="activateSubWayLines()" onclick="this.checked ? activateSubwayLines(): disactivateSubwayLines()" />
-								<label class="onoffswitch-label" for="myonoffswitchmetro">
-									<div class="onoffswitch-inner"></div>
-									<div class="onoffswitch-switch"></div>
-								</label>
-							</div>
-						</div>
-						<div style="width: 240px; height: 30px; text-indent: 10px; font-weight: normal;">
-							Tramway
-							<div class="onoffswitch" style="float: right">
-								<input type="checkbox" name="onoffswitchtram" class="onoffswitch-checkbox" id="myonoffswitchtram" checked="checked" onload="activateTramwayLines()" onclick="this.checked ? activateTramwayLines(): disactivateTramwayLines()" />
-								<label class="onoffswitch-label" for="myonoffswitchtram">
-									<div class="onoffswitch-inner"></div>
-									<div class="onoffswitch-switch"></div>
-								</label>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div id="morecontroladv">
-					Désactiver les lignes :<br/>
-					<div id="activeRoutes">
-						<select name="routes" id="activeRoutes">
-							<option value="test">Liste des lignes</option>
-						</select>
-					</div>
-<!--				<div id="animationVelocity">
-						<label for="sleepDelay">Vitesse de l'animation :</label> 
-						<input type="text" id="sleepDelay" style="border: 0; color: #f6931f; font-weight: bold; width: 100%; text-align: center; margin: 0px;">
-						<div id="slider-animation-velocity" style="width: 200px; margin: auto;"></div>
-					</div>
--->				</div>
-			</div>
-		</div>
 	</body>
 </html>

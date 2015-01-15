@@ -9,7 +9,7 @@ var continueVehicleMovie = false; // Ballet des bus
 var continueDayMovie = false; //au fil de la journee
 var	continueLineDelay = false; // retard du reseau 
 var continueLineMovie = false; // etat du reseau
-var animation = false; // lecture - pause
+var animation=false; // lecture - pause
 
 
 function desactivateUnlinkedStops(){ // a revoir!
@@ -93,6 +93,7 @@ function reset(){
 		if (stops[i].isActive) {stops[i].circle.setStyle({fillColor:inactiveNodeColor, fillOpacity:0.5}); }
 	vehicles.clearLayers();
 	if (debug_mode) console.log("Reset: "+(performance.now()-startTime));
+	if (polygon_far) polygon_far.setStyle({fillOpacity: 0, opacity:0});
 }
 
 /* ---------------------------------------------------- mode avancé / mode simple ------------------------------------------------------ */
@@ -140,7 +141,6 @@ function toggleVehicleMovie(){
 
 function vehicleMovie(){
 	// Toutes les 1 minutes
-	console.log("Blaaa");
 	var dt = 0.5/60;
 	// Fonction qui permet de boucler sur l'heure (permet l'animation)
 	function iter(){
