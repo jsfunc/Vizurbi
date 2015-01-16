@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!Content-Type : text/html; charset=UTF-8>
+<!Vary : Accept-Encoding>
 <html>
 	<head>
 		<title>Vizurbi!</title>
@@ -134,7 +136,7 @@
 							<div class="zoom" >
 								
 								<a href="javascript:window.location.reload()">
-								<img  src="./images/refresh.png" alt="Réinitialiser"  title="Réinitialiser" />
+								<img  style="margin-left : 8px" src="./images/refresh.png" alt="Réinitialiser"  title="Réinitialiser" />
 							</div>
 						</td>
 					</tr>		
@@ -342,7 +344,6 @@
 									<br/><br/><br/>		
 								</div>-->
 								
-								<br/><br/>
 								<a class="orang awesome" href="javascript:PlayPause();"> 	<span class="video" id="animation">lecture</span></a>
 								<br/><br/><br/>
 							</ol>
