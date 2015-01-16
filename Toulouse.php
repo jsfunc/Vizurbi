@@ -93,7 +93,7 @@
 					<tr>
 						<td>
 							<div class="zoom">
-								<button title="Voir les horaires d'une certaine ligne" onclick="menu('menuInfoHoraire');">
+								<button title="Voir les horaires d'une ligne ou d'un arrêt" onclick="menu('menuInfoHoraire');">
 								<img id="horaires" src="./images/img3.png" alt="Horaires bus" />
 							</div>
 						</td>
@@ -132,7 +132,7 @@
 							<ol class="sousmenu"  id="sousmenu1">
 								<form>
 									<li class="premiereligne"> Départ :	</li> <br/>
-									<li class="styletext"> <input id="startStation" type="text" placeholder="Arrêt, adresse, PI..." class="ppfix pre marker black"/> </li> <br/><br/>
+									<li class="styletext"> <input id="startStation" type="text" placeholder="Arrêt" class="ppfix pre marker black"/> </li> <br/><br/>
 									<li class="styletext"> Sélectionnez les lignes actives: </li><br/>
 									<li class="styletext">
 										<div id="routes">
@@ -205,11 +205,12 @@
 								<li class="premiereligne"> Choix de l'arrêt: </li><br/>
 								<li class="styletext"> 
 									<!-- <input id="form_arret" type="text" class="styletext2" name="arret"/> -->
-									<input id="startStation" type="text" placeholder="Nom de l'arret" class="ppfix pre marker black"/>
+									<input id="startStation" type="text" placeholder="Arrêt" class="ppfix pre marker black"/>
 								</li><br/>
 								<li class="styletext">
 									Ou choisir ligne :
 									<select id="Choix_ligne" name="ligne" size="1">
+										<option value="me"></option>
 										<option value="me">A</option>
 										<option value="tr">B</option> <br/>
 										<option value="bu">T1</option>
