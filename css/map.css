@@ -1236,3 +1236,14 @@ border: 0; color: gray; font-weight: bold; width: 20%; text-align: center;
 #slidermin{
 height: 10px; margin: 20px;
 }
+
+.ui-autocomplete {
+	z-index: 9999 !important;
+}
+
+.text {
+width: 240px; height: 30px; text-indent: 10px; 
+font-family : arial,verdana,sans-serif;	font-weight : bold;
+		color: #ffffff;
+		font-size:14px;
+}

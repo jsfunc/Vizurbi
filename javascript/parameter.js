@@ -106,7 +106,7 @@ function createControls(){
 			stops[stopName2id[ui.item.value]].circle.openPopup();
 		}
 	});
-
+	
 	$("#endStation").autocomplete({
 		source: tags, //Object.keys(stopName2id),
 		select: function( event, ui ) {

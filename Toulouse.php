@@ -136,7 +136,7 @@
 									<li class="styletext"> Sélectionnez les lignes actives: </li><br/>
 									<li class="styletext">
 										<div id="routes">
-											<div style="width: 240px; height: 30px; text-indent: 10px; font-weight: normal; ">
+											<div class="text">
 												Toutes:
 												<div class="onoffswitch" style="float: right">
 													<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked="checked" onload="activateAllLines()" 
@@ -158,7 +158,7 @@
 													</label>
 												</div>
 											</div>
-											<div style="width: 240px; height: 30px; text-indent: 10px; font-weight: normal;">
+											<div class="text">
 												Bus:
 												<div class="onoffswitch" style="float: right">
 													<input type="checkbox" name="onoffswitchbus" class="onoffswitch-checkbox" id="myonoffswitchbus" checked="checked" onload="activateBusLines()" onclick="this.checked ? activateBusLines(): disactivateBusLines()" />
@@ -168,7 +168,7 @@
 													</label>
 												</div>
 											</div>
-											<div style="width: 240px; height: 30px; text-indent: 10px; font-weight: normal;">
+											<div class="text">
 												Metro:
 												<div class="onoffswitch" style="float: right">
 													<input type="checkbox" name="onoffswitchmetro" class="onoffswitch-checkbox" id="myonoffswitchmetro" checked="checked" onload="activateSubWayLines()" onclick="this.checked ? activateSubwayLines(): disactivateSubwayLines()" />
@@ -178,7 +178,7 @@
 													</label>
 												</div>
 											</div>
-											<div style="width: 240px; height: 30px; text-indent: 10px; font-weight: normal;">
+											<div class="text">
 												Tramway:
 												<div class="onoffswitch" style="float: right">
 													<input type="checkbox" name="onoffswitchtram" class="onoffswitch-checkbox" id="myonoffswitchtram" checked="checked" onload="activateTramwayLines()" onclick="this.checked ? activateTramwayLines(): disactivateTramwayLines()" />
@@ -190,7 +190,7 @@
 											</div>
 									</li><br/>
 									<li>
-										<input class = "styletext" style="margin-left:60px" type="button" value="Activer / désactiver les lignes" onclick="showmenu(document.getElementById('activeRoutes'));" href  /><br/>
+										<input style="font-family : arial,verdana,sans-serif; font-size: 14px;color: #ffffff;margin-left:50px; font-weight:bold;" type="button" value="Activer / désactiver les lignes" onclick="showmenu(document.getElementById('activeRoutes'));" href  /><br/>
 									</li><br/>
 									<li class="styletext"> 
 										<div class="zoom">
@@ -205,7 +205,7 @@
 								<li class="premiereligne"> Choix de l'arrêt: </li><br/>
 								<li class="styletext"> 
 									<!-- <input id="form_arret" type="text" class="styletext2" name="arret"/> -->
-									<input id="startStation" type="text" placeholder="Arrêt" class="ppfix pre marker black"/>
+									<input id="startStation2" type="text" placeholder="Arrêt" class="ppfix pre marker black"/>
 								</li><br/>
 								<li class="styletext">
 									Ou choisir ligne :
