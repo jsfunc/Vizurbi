@@ -3,8 +3,46 @@ inactiveNodeColor = "gray";
 activeRouteColor =  "#4f8598";// "#009933";
 inactiveRouteColor = "#a9c5d0";
 highlightRouteColor = "#000"; //"#009933";
+var idV, lat, lon;
 
+function getUrlParameter(sParam)
+{
+   var sPageURL = window.location.search.substring(1);
+   var sURLVariables = sPageURL.split('&');
+   for (var i = 0; i < sURLVariables.length; i++) 
+   {
+       var sParameterName = sURLVariables[i].split('=');
+       if (sParameterName[0] == sParam) 
+       {
+           return sParameterName[1];
+       }
+   }
+}  
+
+function getVille(){
+var ville = getUrlParameter("ville");
+if(ville === undefined)ville = "Toulouse";
+return ville;
+}
+function onVilleLoaded(file){
+	// stopIndex = new Array; 
+	// stopName2id = new Array;
+	var flines=file.split(RegExp("\n", "g"));
+	// skip first line: colNames
+	for (var i=1; i<flines.length; i++) if (flines[i].length>0){
+		var descr=flines[i].trim().split(RegExp(",","g"));
+		//stop_id,stop_code,stop_name,stop_lat,stop_lon,location_type,parent_station
+		if (descr[1] == getVille()) {
+		idV = String(descr[0]);
+		lat = String(descr[2]);
+		lon = String(descr[3]);
+		}
+		//stopName2id[newStop.name] = id; // attention : ne gère pas les doublons ! inutilisable tel quel; assigne une station de départ au hasard parmi celles qui ont ce nom; 
+	}
+	if (debug_mode) console.log('onVilleLoaded finished!');
+}
 /* Create map*/
+/*
 function createMap() {
 	if (debug_mode) var startTime = performance.now();
 	network = new L.LayerGroup();		
@@ -71,9 +109,69 @@ function createMap() {
 	if (debug_mode) console.log("createMap: "+(performance.now()-startTime));
 	affStops();
 	affRoutes();
+}*/
+
+
+function createMap() {
+	
+	getZipFile("data/villescoord.zip", onVilleLoaded);	
+	getZipFileWS("data/villescoord.zip", onVilleLoaded,'villescoord');	
+	
+	if (debug_mode) var startTime = performance.now();
+	network = new L.LayerGroup();	
+	var cmAttr = '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+	cmUrl = 'http://{s}.tile.openstreetmap.se/hydda/full/{z}/{x}/{y}.png';
+
+	console.log(lat);
+	// Quelques styleId : représentation du fond de la carte: http://maps.cloudmade.com/editor 				
+	var minimal   = L.tileLayer(cmUrl, {styleId: 22677, attribution: cmAttr});
+	var toulouse = L.latLng(lat, lon);
+	vehicles = new L.layerGroup();
+
+	map = L.map('myMap', {
+		center: toulouse,
+		zoom: 13,
+		minZoom: 11,
+		maxZoom: 17,
+		layers: [minimal,  network, vehicles]
+	});
+	L.Icon.Default.imagePath = 'images/leaflet/';
+	map.spin(true, {length:0, width:20, radius:60, color:"#F4AC42"});
+
+	if (!getCookie("neverShowIntro")){
+		introInfo = L.control({position: 'topleft'});
+		neverShowIntro = function(){
+			setCookie("neverShowIntro", "true");
+			introInfo.removeFrom(map);
+		}
+		introInfo.onAdd = function (map) {
+			var mydiv = L.DomUtil.create('div', 'introInfo'); 
+			var tt = "<h2>Bienvenue sur Vizurbi!";
+			tt = tt + "<a  href=# onClick='introInfo.removeFrom(map);' style=\"position:absolute; right:10px;\"><img src=\"images/icons/close.png\" width=\"30px\" /></a></h2>";
+			tt = tt + "<h3>Tout le réseau Tisséo en un coup d'&oelig;il</h3>"; 
+			tt = tt + "<ul>";
+			tt = tt + "<li>Tant que la roue tourne, les données se chargent (une bonne dizaine de secondes à la première visite).</li>";
+			tt = tt + "<li><span class=\"highlight\">Cliquez sur un arrêt</span> : tous les temps de transport à partir de cet arrêt sont calculés.</li>";
+			tt = tt + "<li>Les plus courts apparaissent en vert, les points rouges sont à 30 minutes.</li>";
+			tt = tt + "<li><span class=\"highlight\">Survolez un arrêt</span> : le meilleur chemin pour s'y rendre apparaît en haut à droite de la carte.</li>";
+			tt = tt + "<li>Pour avoir tous les horaires d'un arrêt ou d'une ligne, <span class=\"highlight\">cliquez dessus avec le bouton droit</span> !</li>";
+			tt = tt + "<li>Plus d'informations, plus de fonctionnalités, mode avancé : voir 'En savoir Plus' en haut à droite !</li>";
+			tt = tt + "</ul>";
+			tt = tt + "<div class=\"understood\"><a href=# onClick='neverShowIntro();'>J'ai compris: fermer et ne plus montrer ce message à l'avenir!  <img src=\"images/icons/check.png\" width=\"25px\"></a></div>";
+			mydiv.innerHTML = tt;
+			return mydiv;
+		};
+
+
+		introInfo.addTo(map);
+	}
+
+	if (getCookie("mode") == "advanced") toggleAdvancedMode();
+
+	if (debug_mode) console.log("createMap: "+(performance.now()-startTime));
+	affStops();
+	affRoutes();
 }
-
-
 function createSubRoutes(){
 	subRoutes = new Array;
 	for (var i=0; i<_trips.length; i++){

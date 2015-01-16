@@ -363,9 +363,12 @@
 			<div id="menuSup">
 				<input id="ville" type="button"  title="Changer de ville" onclick="showmenu(document.getElementById('villes'));"/>
 				<ul style="display:none;" id="villes"> 
-					<li> Toulouse </li> <br/>
-					<li> Angers </li> <br/>
-					<li> Lille </li> <br/>
+					<br/><a href="Toulouse.php?ville=Toulouse"> Toulouse </a> <br/><br/><br/>
+					<a href="Toulouse.php?ville=Nantes"> Nantes </a> <br/><br/><br/>
+					<a href="Toulouse.php?ville=Metz"> Metz </a> <br/><br/><br/>
+					<a href="Toulouse.php?ville=Lille"> Lille </a> <br/><br/><br/>
+					<a href="Toulouse.php?ville=Bordeaux"> Bordeaux </a> <br/><br/><br/>
+					<a href="Toulouse.php?ville=Angers"> Angers </a> <br/><br/><br/>
 				</ul>
 				<input type="button" title="Afficher les infos réseau" onclick="showmenu(document.getElementById('notifres'));" id="inforeseau"/>
 				<div id="notifres" style="display:none;" >

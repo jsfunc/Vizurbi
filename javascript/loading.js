@@ -124,8 +124,8 @@ function getZipFileWS(url, onload, key){
 
 function load(){
 	if (debug_mode) console.log("loading data and starting app!");
+	ville = getVille();
 	createMap(); 
-
 	getZipFile("data/Toulouse/stops.zip", onStopsLoaded); 
 	getZipFile("data/Toulouse/routes.zip", onRoutesLoaded); 
 	getZipFile("data/Toulouse/shapes.zip", onShapesLoaded); 
@@ -140,7 +140,7 @@ function load(){
 
 // loading with web storage
 function loadWS(){
-	if (debug_mode) console.log("loading data and starting app!");
+	if (debug_mode) console.log("loading data and starting appli!");
 	createMap(); 
 	getFile("data/Toulouse/download_date.txt", onDownload_dateLoaded);	  	
 }
