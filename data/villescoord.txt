@@ -1,0 +1,7 @@
+id,ville,latitude,longitude
+1,Toulouse,43.604,1.444
+2,Nantes,47.217,-1.553
+3,Metz,49.119,6.172
+4,Lille,50.632,3.058
+5,Bordeaux,44.840,-0.580
+6,Angers,47.466,-0.550
