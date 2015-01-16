@@ -10,5 +10,3 @@ function intersect(seg1, seg2) {
       x4 = seg2[1][0], y4 = seg2[1][1];
     return ccw(x1, y1, x3, y3, x4, y4) !== ccw(x2, y2, x3, y3, x4, y4) && ccw(x1, y1, x2, y2, x3, y3) !== ccw(x1, y1, x2, y2, x4, y4);
 }
-
-//module.exports = intersect;

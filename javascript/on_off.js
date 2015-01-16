@@ -47,41 +47,49 @@ function toggleRouteActivity(routeId){
 function disactivateAllLines(){ // change Lines->Routes and php accordingly!
 	for (var i=0; i<routes.length; i++) disactivateRoute(i);
 	computeShortestPath();
+	drawAccessible();
 }
 
 function activateAllLines(){ // change Lines->Routes and php accordingly!
 	for (var i=0; i<routes.length; i++) activateRoute(i);
 	computeShortestPath();
+	drawAccessible();
 }
 
 function disactivateBusLines(){ 
 	for (var i=0; i<routes.length; i++)  if (routes[i].type==3) disactivateRoute(i);
 	computeShortestPath();
+	drawAccessible();
 }
 
 function activateBusLines(){ 
 	for (var i=0; i<routes.length; i++) if (routes[i].type==3) activateRoute(i);
 	computeShortestPath();
+	drawAccessible();
 }
 
 function disactivateSubwayLines(){ 
 	for (var i=0; i<routes.length; i++)  if (routes[i].type==1) disactivateRoute(i);
 	computeShortestPath();
+	drawAccessible();
 }
 
 function activateSubwayLines(){ 
 	for (var i=0; i<routes.length; i++) if (routes[i].type==1) activateRoute(i);
 	computeShortestPath();
+	drawAccessible();
 }
 
 function disactivateTramwayLines(){ 
 	for (var i=0; i<routes.length; i++)  if (routes[i].type==0) disactivateRoute(i);
 	computeShortestPath();
+	drawAccessible();
 }
 
 function activateTramwayLines(){ 
 	for (var i=0; i<routes.length; i++) if (routes[i].type==0) activateRoute(i);
 	computeShortestPath();
+	drawAccessible();
 }
 
 /* ------------------------------------------------------- Réinitialiser ----------------------------------------------------------- */
@@ -93,6 +101,7 @@ function reset(){
 		if (stops[i].isActive) {stops[i].circle.setStyle({fillColor:inactiveNodeColor, fillOpacity:0.5}); }
 	vehicles.clearLayers();
 	if (debug_mode) console.log("Reset: "+(performance.now()-startTime));
+	if (polygon_far) polygon_far.setStyle({fillOpacity: 0, opacity:0});
 }
 
 /* ---------------------------------------------------- mode avancé / mode simple ------------------------------------------------------ */
@@ -498,4 +507,3 @@ function PlayPause(){
 		animation = true;
 	}	
 }
-

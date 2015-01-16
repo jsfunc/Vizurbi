@@ -4,8 +4,6 @@ activeRouteColor =  "#4f8598";// "#009933";
 inactiveRouteColor = "#a9c5d0";
 highlightRouteColor = "#000"; //"#009933";
 
-var	polygon_far;
-
 /* Create map*/
 function createMap() {
 	if (debug_mode) var startTime = performance.now();
@@ -17,7 +15,7 @@ function createMap() {
 
 	// Quelques styleId : représentation du fond de la carte: http://maps.cloudmade.com/editor 				
 	var minimal   = L.tileLayer(cmUrl, {styleId: 22677, attribution: cmAttr});
-	var toulouse = L.latLng(43.602, 1.441);
+	var toulouse = L.latLng(43.600, 1.441);
 	vehicles = new L.layerGroup();
 
 	map = L.map('myMap', {
@@ -53,12 +51,22 @@ function createMap() {
 			mydiv.innerHTML = tt;
 			return mydiv;
 		};
-
-
 		introInfo.addTo(map);
 	}
 
-	if (getCookie("mode") == "advanced") toggleAdvancedMode();
+	notif = L.control({position: 'bottomright'});
+		notif.onAdd = function (map) {
+			var mydiv = L.DomUtil.create('div', 'notif'); 
+			var tt = "<img src=\"images/notif.png\">";
+			tt = tt + "<a  href=# onClick='notif.removeFrom(map);' style=\"position:absolute; right:0px;\"><img src=\"images/icons/close.png\" width=\"30px\" /></a></h2>";
+			tt = tt + "<h2>Infos réseau</h2>";
+			tt=tt+"<object data=\"./Alert/technicalIncident.txt\"/>";
+			mydiv.innerHTML = tt;
+			return mydiv;
+		}
+	notif.addTo(map);
+	
+	//if (getCookie("mode") == "advanced") toggleAdvancedMode();
 
 	if (debug_mode) console.log("createMap: "+(performance.now()-startTime));
 	affStops();
@@ -122,7 +130,7 @@ function affStops(){
 			if (stops[i].parentStation){
 				pid = stopIndex[stops[i].parentStation];
 				if (!stops[pid].circle){
-					var c = new L.circleMarker(stops[i], {"color":"#008000", opacity:1, "radius":6, "stroke": false, "fillOpacity":0.5});//"weight":20, 
+					var c = new L.circleMarker(stops[i], {"color":"#000000", opacity:1, "radius":6, "stroke": false, "fillOpacity":1});//"weight":20, 
 					stops[pid].circle = c;
 					c.id = pid;
 					c.bindPopup(stops[pid].name + " " + stops[i].code);
@@ -332,22 +340,7 @@ function affRouteInfo(routeId){
 	lineInfo.update(tt);
 }
 
-// function drawAccessible(){
-	// if (debug_mode) var startTime = performance.now();	
-	// for(var i=0; i<stops.length; i++) if (stops[i].isActive) {
-		// if (arrivalTime[i] < startHour + maxMinute/60){
-			// var myColor = val2color((arrivalTime[i] - startHour)/(maxMinute/59));
-			// stops[i].circle.setStyle({fillColor:myColor, fillOpacity:1}); 
-		// }
-		// else{
-			// stops[i].circle.setStyle({fillColor:inactiveNodeColor, fillOpacity:0.5}); 
-		// }
-	// }
-	// if (debug_mode) console.log("drawAccessible: "+(performance.now()-startTime)+"maxMinute :"+maxMinute+" startHour :"+startHour);
-	// drawAccessibleZones();
-// }
-
-
+var	polygon_far;
 function drawAccessible(){
 	if (debug_mode) var startTime = performance.now();	
 /**/	var bounds_far = new Array();
@@ -359,26 +352,22 @@ function drawAccessible(){
 	for(var i=0; i<stops.length; i++) if (stops[i].isActive) {
 		if (arrivalTime[i] < startHour + maxMinute/60){
 			var myColor = val2color((arrivalTime[i] - startHour)/(maxMinute/59));
-			stops[i].circle.setStyle({fillColor:"#FF5411"/*myColor/*"#FF000F"*/, fillOpacity:0.5});
+			stops[i].circle.setStyle({fillColor:"#FFF"/*myColor/*"#FF000F"*/, fillOpacity:0.7, opacity:0.7, stroke:true});
 			var radius = (startHour + maxMinute/60 - arrivalTime[i]) *vWalk * 100;
 			if (Math.floor(((arrivalTime[i] - startHour)*60))<=maxMinute){
 /**/			bounds_far.push([stops[i].lat, stops[i].lng]);
 			}
 		}
 		else{
-			stops[i].circle.setStyle({fillColor:inactiveNodeColor, fillOpacity:0.5}); 
+			stops[i].circle.setStyle({fillColor:inactiveNodeColor, fillOpacity:0.5, stroke:false }); 
 		}
 	}
 		
-/**/	polygon_far = L.polygon(hull(bounds_far, 0.014), {color: "#FFC800", fillOpacity: 0.1, opacity:1,weight: 3,  clickable: false}).addTo(map).bindPopup(""+maxMinute)/*.openPopup()*/;
+/**/	polygon_far = L.polygon(hull(bounds_far, 0.011), {color: '#FF5411', fillOpacity: 0.1, opacity:1,weight: 3,  clickable: false}).addTo(map).bindPopup(""+maxMinute)/*.openPopup()*/;
 
 	if (debug_mode) console.log("drawAccessible: "+(performance.now()-startTime)+"maxMinute :"+maxMinute+" startHour :"+startHour);
 	//drawAccessibleZones();
 }
-
-
-
-
 
 function drawAccessibleZones(){
 	if (debug_mode) var startTime = performance.now();	

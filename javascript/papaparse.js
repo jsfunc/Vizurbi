@@ -1,1 +1,1323 @@
-(function(p){var n=!p.document,j;var t={},r=0;var b={delimiter:"",header:false,dynamicTyping:false,preview:0,step:undefined,encoding:"",worker:false,comments:false,complete:undefined,error:undefined,download:false,chunk:undefined,keepEmptyRows:false};p.Papa={};p.Papa.parse=f;p.Papa.unparse=i;p.Papa.RECORD_SEP=String.fromCharCode(30);p.Papa.UNIT_SEP=String.fromCharCode(31);p.Papa.BYTE_ORDER_MARK="\ufeff";p.Papa.BAD_DELIMITERS=["\r","\n",'"',p.Papa.BYTE_ORDER_MARK];p.Papa.WORKERS_SUPPORTED=!!p.Worker;p.Papa.LocalChunkSize=1024*1024*10;p.Papa.RemoteChunkSize=1024*1024*5;p.Papa.DefaultDelimiter=",";p.Papa.Parser=c;p.Papa.ParserHandle=s;p.Papa.NetworkStreamer=k;p.Papa.FileStreamer=m;if(p.jQuery){var e=p.jQuery;e.fn.parse=function(y){var x=y.config||{};var v=[];this.each(function(B){var A=e(this).prop("tagName").toUpperCase()=="INPUT"&&e(this).attr("type").toLowerCase()=="file"&&p.FileReader;if(!A||!this.files||this.files.length==0){return true}for(var C=0;C<this.files.length;C++){v.push({file:this.files[C],inputElem:this,instanceConfig:e.extend({},x)})}});z();return this;function z(){if(v.length==0){return}var C=v[0];if(a(y.before)){var B=y.before(C.file,C.inputElem);if(typeof B==="object"){if(B.action=="abort"){w("AbortError",C.file,C.inputElem,B.reason);return}else{if(B.action=="skip"){u();return}else{if(typeof B.config==="object"){C.instanceConfig=e.extend(C.instanceConfig,B.config)}}}}else{if(B=="skip"){u();return}}}var A=C.instanceConfig.complete;C.instanceConfig.complete=function(D){if(a(A)){A(D,C.file,C.inputElem)}u()};Papa.parse(C.file,C.instanceConfig)}function w(A,B,C,D){if(a(y.error)){y.error({name:A},B,C,D)}}function u(){v.splice(0,1);z()}}}if(n){p.onmessage=l}else{if(Papa.WORKERS_SUPPORTED){j=q()}}function f(E,A){var v=n?A:h(A);var u=v.worker&&Papa.WORKERS_SUPPORTED&&j;if(u){var D=g();D.userStep=v.step;D.userChunk=v.chunk;D.userComplete=v.complete;D.userError=v.error;v.step=a(v.step);v.chunk=a(v.chunk);v.complete=a(v.complete);v.error=a(v.error);delete v.worker;D.postMessage({input:E,config:v,workerId:D.id})}else{if(typeof E==="string"){if(v.download){var B=new k(v);B.stream(E)}else{var z=new s(v);var x=z.parse(E);return x}}else{if(E instanceof File){if(v.step||v.chunk){var B=new m(v);B.stream(E)}else{var z=new s(v);if(n){var y=new FileReaderSync();var C=y.readAsText(E,v.encoding);return z.parse(C)}else{y=new FileReader();y.onload=function(F){var G=new s(v);var w=G.parse(F.target.result)};y.onerror=function(){if(a(v.error)){v.error(y.error,E)}};y.readAsText(E,v.encoding)}}}}}}function i(D,B){var C="";var F=[];var v=false;var y=",";var w="\r\n";A();if(typeof D==="string"){D=JSON.parse(D)}if(D instanceof Array){if(!D.length||D[0] instanceof Array){return E(null,D)}else{if(typeof D[0]==="object"){return E(z(D[0]),D)}}}else{if(typeof D==="object"){if(typeof D.data==="string"){D.data=JSON.parse(D.data)}if(D.data instanceof Array){if(!D.fields){D.fields=D.data[0] instanceof Array?D.fields:z(D.data[0])}if(!(D.data[0] instanceof Array)&&typeof D.data[0]!=="object"){D.data=[D.data]}}return E(D.fields||[],D.data||[])}}throw"exception: Unable to serialize unrecognized input";function A(){if(typeof B!=="object"){return}if(typeof B.delimiter==="string"&&B.delimiter.length==1&&p.Papa.BAD_DELIMITERS.indexOf(B.delimiter)==-1){y=B.delimiter}if(typeof B.quotes==="boolean"||B.quotes instanceof Array){v=B.quotes}if(typeof B.newline==="string"){w=B.newline}}function z(I){if(typeof I!=="object"){return[]}var H=[];for(var G in I){H.push(G)}return H}function E(M,J){var H="";if(typeof M==="string"){M=JSON.parse(M)}if(typeof J==="string"){J=JSON.parse(J)}var L=M instanceof Array&&M.length>0;var N=!(J[0] instanceof Array);if(L){for(var K=0;K<M.length;K++){if(K>0){H+=y}H+=x(M[K],K)}if(J.length>0){H+=w}}for(var P=0;P<J.length;P++){var O=L?M.length:J[P].length;for(var G=0;G<O;G++){if(G>0){H+=y}var I=L&&N?M[G]:G;H+=x(J[P][I],G)}if(P<J.length-1){H+=w}}return H}function x(I,G){if(typeof I==="undefined"||I===null){return""}I=I.toString().replace(/"/g,'""');var H=(typeof v==="boolean"&&v)||(v instanceof Array&&v[G])||u(I,p.Papa.BAD_DELIMITERS)||I.indexOf(y)>-1||I.charAt(0)==" "||I.charAt(I.length-1)==" ";return H?'"'+I+'"':I}function u(I,H){for(var G=0;G<H.length;G++){if(I.indexOf(H[G])>-1){return true}}return false}}function k(x){x=x||{};if(!x.chunkSize){x.chunkSize=Papa.RemoteChunkSize}var B=0,v=0;var y="";var w="";var A,u;var z=new s(o(x));this.stream=function(E){if(n){u=function(){D();C()}}else{u=function(){D()}}u();function D(){A=new XMLHttpRequest();if(!n){A.onload=C;A.onerror=F}A.open("GET",E,!n);if(x.step){var H=B+x.chunkSize-1;if(v&&H>v){H=v}A.setRequestHeader("Range","bytes="+B+"-"+H)}A.send();if(n&&A.status==0){F()}else{B+=x.chunkSize}}function C(){if(A.readyState!=4){return}if(A.status<200||A.status>=400){F();return}y+=w+A.responseText;w="";var J=!x.step||B>G(A);if(!J){var H=y.lastIndexOf("\n");if(H<0){H=y.lastIndexOf("\r")}if(H>-1){w=y.substring(H+1);y=y.substring(0,H)}else{u();return}}var I=z.parse(y);y="";if(n){p.postMessage({results:I,workerId:Papa.WORKER_ID,finished:J})}else{if(a(x.chunk)){x.chunk(I);I=undefined}}if(!J&&!I.meta.paused){u()}}function F(){if(a(x.error)){x.error(A.statusText)}else{if(n&&x.error){p.postMessage({workerId:Papa.WORKER_ID,error:A.statusText,finished:false})}}}function G(I){var H=I.getResponseHeader("Content-Range");return parseInt(H.substr(H.lastIndexOf("/")+1))}}}function m(w){w=w||{};if(!w.chunkSize){w.chunkSize=Papa.LocalChunkSize}var u=0;var v="";var A="";var x,z,C;var y=new s(o(w));var B=typeof FileReader==="function";this.stream=function(G){var I=G.slice||G.webkitSlice||G.mozSlice;if(B){x=new FileReader();x.onload=E;x.onerror=H}else{x=new FileReaderSync()}D();function D(){if(u<G.size){F()}}function F(){var K=Math.min(u+w.chunkSize,G.size);var J=x.readAsText(I.call(G,u,K),w.encoding);if(!B){E({target:{result:J}})}}function E(L){u+=w.chunkSize;v+=A+L.target.result;A="";var M=u>=G.size;if(!M){var J=v.lastIndexOf("\n");if(J<0){J=v.lastIndexOf("\r")}if(J>-1){A=v.substring(J+1);v=v.substring(0,J)}else{D();return}}var K=y.parse(v);v="";if(n){p.postMessage({results:K,workerId:Papa.WORKER_ID,finished:M})}else{if(a(w.chunk)){w.chunk(K,G);K=undefined}}if(!M&&!K.meta.paused){D()}}function H(){if(a(w.error)){w.error(x.error,G)}else{if(n&&w.error){p.postMessage({workerId:Papa.WORKER_ID,error:x.error,file:G,finished:false})}}}}}function s(C){var I=/^\s*-?(\d*\.?\d+|\d+\.?\d*)(e[-+]?\d+)?\s*$/i;var G=this;var F;var A;var x=false;var B;var J=[];var w={data:[],errors:[],meta:{}};C=o(C);this.parse=function(L){B=false;if(!C.delimiter){var K=E(L);if(K.successful){C.delimiter=K.bestDelimiter}else{B=true;C.delimiter=Papa.DefaultDelimiter}w.meta.delimiter=C.delimiter}if(a(C.step)){var M=C.step;C.step=function(N){w=N;if(z()){v()}else{M(v(),G)}}}if(C.preview&&C.header){C.preview++}F=L;A=new c(C);w=A.parse(F);v();if(a(C.complete)&&!x){C.complete(w)}return x?{meta:{paused:true}}:w};this.pause=function(){x=true;A.abort();F=F.substr(A.getCharIndex())};this.resume=function(){x=false;A=new c(C);A.parse(F);if(a(C.complete)&&!x){C.complete(w)}};this.abort=function(){A.abort();if(a(C.complete)){C.complete(w)}F=""};function v(){if(w&&B){H("Delimiter","UndetectableDelimiter","Unable to auto-detect delimiting character; defaulted to '"+Papa.DefaultDelimiter+"'");B=false}if(z()){u()}return D()}function z(){return C.header&&J.length==0}function u(){if(!w){return}for(var L=0;z()&&L<w.data.length;L++){for(var K=0;K<w.data[L].length;K++){J.push(w.data[L][K])}}w.data.splice(0,1)}function D(){if(!w||(!C.header&&!C.dynamicTyping)){return w}for(var L=0;L<w.data.length;L++){var N={};for(var K=0;K<w.data[L].length;K++){if(C.dynamicTyping){var M=w.data[L][K];if(M=="true"){w.data[L][K]=true}else{if(M=="false"){w.data[L][K]=false}else{w.data[L][K]=y(M)}}}if(C.header){if(K>=J.length){if(!N.__parsed_extra){N.__parsed_extra=[]}N.__parsed_extra.push(w.data[L][K])}else{N[J[K]]=w.data[L][K]}}}if(C.header){w.data[L]=N;if(K>J.length){H("FieldMismatch","TooManyFields","Too many fields: expected "+J.length+" fields but parsed "+K,L)}else{if(K<J.length){H("FieldMismatch","TooFewFields","Too few fields: expected "+J.length+" fields but parsed "+K,L)}}}}if(C.header&&w.meta){w.meta.fields=J}return w}function E(Q){var R=[",","\t","|",";",Papa.RECORD_SEP,Papa.UNIT_SEP];var L,U,P;for(var N=0;N<R.length;N++){var K=R[N];var T=0,V=0;P=undefined;var O=new c({delimiter:K,preview:10}).parse(Q);for(var M=0;M<O.data.length;M++){var S=O.data[M].length;V+=S;if(typeof P==="undefined"){P=S;continue}else{if(S>1){T+=Math.abs(S-P);P=S}}}V/=O.data.length;if((typeof U==="undefined"||T<U)&&V>1.99){U=T;L=K}}C.delimiter=L;return{successful:!!L,bestDelimiter:L}}function y(L){var K=I.test(L);return K?parseFloat(L):L}function H(K,L,N,M){w.errors.push({type:K,code:L,message:N,row:M})}}function c(W){var y=/^\s*$/;var v;var I;var O;var R;var F;var ah;var P;var ac;var V;var ad;var af;var U;var D;var ae;var A;var H=false;W=W||{};I=W.delimiter;O=W.comments;R=W.step;ah=W.preview;if(typeof I!=="string"||I.length!=1||Papa.BAD_DELIMITERS.indexOf(I)>-1){I=","}if(O===true){O="#"}else{if(typeof O!=="string"||O.length!=1||Papa.BAD_DELIMITERS.indexOf(O)>-1||O==I){O=false}}this.parse=function(ai){if(typeof ai!=="string"){throw"Input must be a string"}Y(ai);return T()};this.abort=function(){H=true};this.getCharIndex=function(){return ac};function T(){while(ac<v.length){if(H){break}if(ah>0&&A>=ah){break}if(P=='"'){Q()}else{if(V){E()}else{J()}}S()}return C()}function S(){ac++;P=v[ac]}function C(){if(H){X("Abort","ParseAbort","Parsing was aborted by the user's step function")}if(V){X("Quotes","MissingQuotes","Unescaped or mismatched quotes")}x();if(!a(R)){return ag()}}function Q(){if(K()&&!w()){V=!V}else{z();if(V&&w()){ac++}else{X("Quotes","UnexpectedQuotes","Unexpected quotes")}}}function E(){if(L(ac)||ab(ac)){ad++}z()}function J(){if(P==I){G()}else{if(L(ac)){u();S()}else{if(ab(ac)){u()}else{if(B()){aa()}else{z()}}}}}function B(){if(!O){return false}var ai=ac==0||ab(ac-1)||L(ac-2);return ai&&v[ac]===O}function aa(){while(!L(ac)&&!ab(ac)&&ac<v.length){S()}}function z(){af[D][ae]+=P}function G(){af[D].push("");ae=af[D].length-1}function u(){x();ad++;A++;af.push([]);D=af.length-1;G()}function x(){M();if(a(R)){if(af[D]){R(ag())}N()}}function M(){if(af[D].length==1&&y.test(af[D][0])){if(W.keepEmptyRows){af[D].splice(0,1)}else{af.splice(D,1)}D=af.length-1}}function L(ai){return ai<v.length-1&&((v[ai]=="\r"&&v[ai+1]=="\n")||(v[ai]=="\n"&&v[ai+1]=="\r"))}function ab(ai){return v[ai]=="\r"||v[ai]=="\n"}function w(){return !K()&&ac<v.length-1&&v[ac+1]=='"'}function K(){return(!V&&Z(ac-1))||Z(ac+1)}function Z(ai){if(typeof ai!="number"){ai=ac}var aj=v[ai];return(ai<=-1||ai>=v.length)||(aj==I||aj=="\r"||aj=="\n")}function X(ai,aj,ak){U.push({type:ai,code:aj,message:ak,line:ad,row:D,index:ac})}function Y(ai){v=ai;V=false;ac=0,A=0,ad=1;N();af=[[""]];P=v[ac]}function N(){af=[];U=[];D=0;ae=0}function ag(){return{data:af,errors:U,meta:{lines:ad,delimiter:I,aborted:H,truncated:ah>0&&ac<v.length}}}}function q(){var u="worker"+String(Math.random()).substr(2);document.write('<script id="'+u+'"><\/script>');return document.getElementById(u).previousSibling.src}function g(){if(!Papa.WORKERS_SUPPORTED){return false}var u=new p.Worker(j);u.onmessage=d;u.id=r++;t[u.id]=u;return u}function d(v){var x=v.data;var w=t[x.workerId];if(x.error){w.userError(x.error,x.file)}else{if(x.results&&x.results.data){if(a(w.userStep)){for(var u=0;u<x.results.data.length;u++){w.userStep({data:[x.results.data[u]],errors:x.results.errors,meta:x.results.meta})}delete x.results}else{if(a(w.userChunk)){w.userChunk(x.results,x.file);delete x.results}}}}if(x.finished){if(a(t[x.workerId].userComplete)){t[x.workerId].userComplete(x.results)}t[x.workerId].terminate();delete t[x.workerId]}}function l(v){var w=v.data;if(typeof Papa.WORKER_ID==="undefined"&&w){Papa.WORKER_ID=w.workerId}if(typeof w.input==="string"){p.postMessage({workerId:Papa.WORKER_ID,results:Papa.parse(w.input,w.config),finished:true})}else{if(w.input instanceof File){var u=Papa.parse(w.input,w.config);if(u){p.postMessage({workerId:Papa.WORKER_ID,results:u,finished:true})}}}}function h(u){if(typeof u!=="object"){u={}}var v=o(u);if(typeof v.delimiter!=="string"||v.delimiter.length!=1||Papa.BAD_DELIMITERS.indexOf(v.delimiter)>-1){v.delimiter=b.delimiter}if(typeof v.header!=="boolean"){v.header=b.header}if(typeof v.dynamicTyping!=="boolean"){v.dynamicTyping=b.dynamicTyping}if(typeof v.preview!=="number"){v.preview=b.preview}if(typeof v.step!=="function"){v.step=b.step}if(typeof v.complete!=="function"){v.complete=b.complete}if(typeof v.error!=="function"){v.error=b.error}if(typeof v.encoding!=="string"){v.encoding=b.encoding}if(typeof v.worker!=="boolean"){v.worker=b.worker}if(typeof v.download!=="boolean"){v.download=b.download}if(typeof v.keepEmptyRows!=="boolean"){v.keepEmptyRows=b.keepEmptyRows}return v}function o(w){if(typeof w!=="object"){return w}var u=w instanceof Array?[]:{};for(var v in w){u[v]=o(w[v])}return u}function a(u){return typeof u==="function"}})(this);
+/*
+	Papa Parse
+	v3.1.2
+	https://github.com/mholt/PapaParse
+*/
+(function(global)
+{
+	"use strict";
+
+	var IS_WORKER = !global.document, SCRIPT_PATH;
+	var workers = {}, workerIdCounter = 0;
+
+	// A configuration object from which to draw default settings
+	var DEFAULTS = {
+		delimiter: "",	// empty: auto-detect
+		header: false,
+		dynamicTyping: false,
+		preview: 0,
+		step: undefined,
+		encoding: "",	// browser should default to "UTF-8"
+		worker: false,
+		comments: false,
+		complete: undefined,
+		error: undefined,
+		download: false,
+		chunk: undefined,
+		keepEmptyRows: false
+	};
+
+	global.Papa = {};
+
+	global.Papa.parse = CsvToJson;
+	global.Papa.unparse = JsonToCsv;
+
+	global.Papa.RECORD_SEP = String.fromCharCode(30);
+	global.Papa.UNIT_SEP = String.fromCharCode(31);
+	global.Papa.BYTE_ORDER_MARK = "\ufeff";
+	global.Papa.BAD_DELIMITERS = ["\r", "\n", "\"", global.Papa.BYTE_ORDER_MARK];
+	global.Papa.WORKERS_SUPPORTED = !!global.Worker;
+
+	// Configurable chunk sizes for local and remote files, respectively
+	global.Papa.LocalChunkSize = 1024 * 1024 * 10;	// 10 MB
+	global.Papa.RemoteChunkSize = 1024 * 1024 * 5;	// 5 MB
+	global.Papa.DefaultDelimiter = ",";				// Used if not specified and detection fails
+
+	// Exposed for testing and development only
+	global.Papa.Parser = Parser;
+	global.Papa.ParserHandle = ParserHandle;
+	global.Papa.NetworkStreamer = NetworkStreamer;
+	global.Papa.FileStreamer = FileStreamer;
+
+	if (global.jQuery)
+	{
+		var $ = global.jQuery;
+		$.fn.parse = function(options)
+		{
+			var config = options.config || {};
+			var queue = [];
+
+			this.each(function(idx)
+			{
+				var supported = $(this).prop('tagName').toUpperCase() == "INPUT"
+								&& $(this).attr('type').toLowerCase() == "file"
+								&& global.FileReader;
+
+				if (!supported || !this.files || this.files.length == 0)
+					return true;	// continue to next input element
+
+				for (var i = 0; i < this.files.length; i++)
+				{
+					queue.push({
+						file: this.files[i],
+						inputElem: this,
+						instanceConfig: $.extend({}, config)
+					});
+				}
+			});
+
+			parseNextFile();	// begin parsing
+			return this;		// maintains chainability
+
+
+			function parseNextFile()
+			{
+				if (queue.length == 0)
+					return;
+
+				var f = queue[0];
+
+				if (isFunction(options.before))
+				{
+					var returned = options.before(f.file, f.inputElem);
+
+					if (typeof returned === 'object')
+					{
+						if (returned.action == "abort")
+						{
+							error("AbortError", f.file, f.inputElem, returned.reason);
+							return;	// Aborts all queued files immediately
+						}
+						else if (returned.action == "skip")
+						{
+							fileComplete();	// parse the next file in the queue, if any
+							return;
+						}
+						else if (typeof returned.config === 'object')
+							f.instanceConfig = $.extend(f.instanceConfig, returned.config);
+					}
+					else if (returned == "skip")
+					{
+						fileComplete();	// parse the next file in the queue, if any
+						return;
+					}
+				}
+
+				// Wrap up the user's complete callback, if any, so that ours also gets executed
+				var userCompleteFunc = f.instanceConfig.complete;
+				f.instanceConfig.complete = function(results)
+				{
+					if (isFunction(userCompleteFunc))
+						userCompleteFunc(results, f.file, f.inputElem);
+					fileComplete();
+				};
+
+				Papa.parse(f.file, f.instanceConfig);
+			}
+
+			function error(name, file, elem, reason)
+			{
+				if (isFunction(options.error))
+					options.error({name: name}, file, elem, reason);
+			}
+
+			function fileComplete()
+			{
+				queue.splice(0, 1);
+				parseNextFile();
+			}
+		}
+	}
+
+
+	if (IS_WORKER)
+		global.onmessage = workerThreadReceivedMessage;
+	else if (Papa.WORKERS_SUPPORTED)
+		SCRIPT_PATH = getScriptPath();
+
+
+
+
+	function CsvToJson(_input, _config)
+	{
+		var config = IS_WORKER ? _config : copyAndValidateConfig(_config);
+		var useWorker = config.worker && Papa.WORKERS_SUPPORTED && SCRIPT_PATH;
+
+		if (useWorker)
+		{
+			var w = newWorker();
+
+			w.userStep = config.step;
+			w.userChunk = config.chunk;
+			w.userComplete = config.complete;
+			w.userError = config.error;
+
+			config.step = isFunction(config.step);
+			config.chunk = isFunction(config.chunk);
+			config.complete = isFunction(config.complete);
+			config.error = isFunction(config.error);
+			delete config.worker;	// prevent infinite loop
+
+			w.postMessage({
+				input: _input,
+				config: config,
+				workerId: w.id
+			});
+		}
+		else
+		{
+			if (typeof _input === 'string')
+			{
+				if (config.download)
+				{
+					var streamer = new NetworkStreamer(config);
+					streamer.stream(_input);
+				}
+				else
+				{
+					var ph = new ParserHandle(config);
+					var results = ph.parse(_input);
+					return results;
+				}
+			}
+			else if (_input instanceof File)
+			{
+				if (config.step || config.chunk)
+				{
+					var streamer = new FileStreamer(config);
+					streamer.stream(_input);
+				}
+				else
+				{
+					var ph = new ParserHandle(config);
+
+					if (IS_WORKER)
+					{
+						var reader = new FileReaderSync();
+						var input = reader.readAsText(_input, config.encoding);
+						return ph.parse(input);
+					}
+					else
+					{
+						reader = new FileReader();
+						reader.onload = function(event)
+						{
+							var ph = new ParserHandle(config);
+							var results = ph.parse(event.target.result);
+						};
+						reader.onerror = function()
+						{
+							if (isFunction(config.error))
+								config.error(reader.error, _input);
+						};
+						reader.readAsText(_input, config.encoding);
+					}
+				}
+			}
+		}
+	}
+
+
+
+
+
+
+	function JsonToCsv(_input, _config)
+	{
+		var _output = "";
+		var _fields = [];
+
+		// Default configuration
+		var _quotes = false;	// whether to surround every datum with quotes
+		var _delimiter = ",";	// delimiting character
+		var _newline = "\r\n";	// newline character(s)
+
+		unpackConfig();
+
+		if (typeof _input === 'string')
+			_input = JSON.parse(_input);
+
+		if (_input instanceof Array)
+		{
+			if (!_input.length || _input[0] instanceof Array)
+				return serialize(null, _input);
+			else if (typeof _input[0] === 'object')
+				return serialize(objectKeys(_input[0]), _input);
+		}
+		else if (typeof _input === 'object')
+		{
+			if (typeof _input.data === 'string')
+				_input.data = JSON.parse(_input.data);
+
+			if (_input.data instanceof Array)
+			{
+				if (!_input.fields)
+					_input.fields = _input.data[0] instanceof Array
+									? _input.fields
+									: objectKeys(_input.data[0]);
+
+				if (!(_input.data[0] instanceof Array) && typeof _input.data[0] !== 'object')
+					_input.data = [_input.data];	// handles input like [1,2,3] or ["asdf"]
+			}
+
+			return serialize(_input.fields || [], _input.data || []);
+		}
+
+		// Default (any valid paths should return before this)
+		throw "exception: Unable to serialize unrecognized input";
+
+
+		function unpackConfig()
+		{
+			if (typeof _config !== 'object')
+				return;
+
+			if (typeof _config.delimiter === 'string'
+				&& _config.delimiter.length == 1
+				&& global.Papa.BAD_DELIMITERS.indexOf(_config.delimiter) == -1)
+			{
+				_delimiter = _config.delimiter;
+			}
+
+			if (typeof _config.quotes === 'boolean'
+				|| _config.quotes instanceof Array)
+				_quotes = _config.quotes;
+
+			if (typeof _config.newline === 'string')
+				_newline = _config.newline;
+		}
+
+
+		// Turns an object's keys into an array
+		function objectKeys(obj)
+		{
+			if (typeof obj !== 'object')
+				return [];
+			var keys = [];
+			for (var key in obj)
+				keys.push(key);
+			return keys;
+		}
+
+		// The double for loop that iterates the data and writes out a CSV string including header row
+		function serialize(fields, data)
+		{
+			var csv = "";
+
+			if (typeof fields === 'string')
+				fields = JSON.parse(fields);
+			if (typeof data === 'string')
+				data = JSON.parse(data);
+
+			var hasHeader = fields instanceof Array && fields.length > 0;
+			var dataKeyedByField = !(data[0] instanceof Array);
+
+			// If there a header row, write it first
+			if (hasHeader)
+			{
+				for (var i = 0; i < fields.length; i++)
+				{
+					if (i > 0)
+						csv += _delimiter;
+					csv += safe(fields[i], i);
+				}
+				if (data.length > 0)
+					csv += _newline;
+			}
+
+			// Then write out the data
+			for (var row = 0; row < data.length; row++)
+			{
+				var maxCol = hasHeader ? fields.length : data[row].length;
+
+				for (var col = 0; col < maxCol; col++)
+				{
+					if (col > 0)
+						csv += _delimiter;
+					var colIdx = hasHeader && dataKeyedByField ? fields[col] : col;
+					csv += safe(data[row][colIdx], col);
+				}
+
+				if (row < data.length - 1)
+					csv += _newline;
+			}
+
+			return csv;
+		}
+
+		// Encloses a value around quotes if needed (makes a value safe for CSV insertion)
+		function safe(str, col)
+		{
+			if (typeof str === "undefined" || str === null)
+				return "";
+
+			str = str.toString().replace(/"/g, '""');
+
+			var needsQuotes = (typeof _quotes === 'boolean' && _quotes)
+							|| (_quotes instanceof Array && _quotes[col])
+							|| hasAny(str, global.Papa.BAD_DELIMITERS)
+							|| str.indexOf(_delimiter) > -1
+							|| str.charAt(0) == ' '
+							|| str.charAt(str.length - 1) == ' ';
+
+			return needsQuotes ? '"' + str + '"' : str;
+		}
+
+		function hasAny(str, substrings)
+		{
+			for (var i = 0; i < substrings.length; i++)
+				if (str.indexOf(substrings[i]) > -1)
+					return true;
+			return false;
+		}
+	}
+
+
+
+	// TODO: Many of the functions of NetworkStreamer and FileStreamer are similar or the same. Consolidate?
+	function NetworkStreamer(config)
+	{
+		config = config || {};
+		if (!config.chunkSize)
+			config.chunkSize = Papa.RemoteChunkSize;
+
+		var start = 0, fileSize = 0;
+		var aggregate = "";
+		var partialLine = "";
+		var xhr, nextChunk;
+		var handle = new ParserHandle(copy(config));
+
+		this.stream = function(url)
+		{
+			if (IS_WORKER)
+			{
+				nextChunk = function()
+				{
+					readChunk();
+					chunkLoaded();
+				};
+			}
+			else
+			{
+				nextChunk = function()
+				{
+					readChunk();
+				};
+			}
+
+			nextChunk();	// Starts streaming
+
+
+			function readChunk()
+			{
+				xhr = new XMLHttpRequest();
+				if (!IS_WORKER)
+				{
+					xhr.onload = chunkLoaded;
+					xhr.onerror = chunkError;
+				}
+				xhr.open("GET", url, !IS_WORKER);
+				if (config.step)
+				{
+					var end = start + config.chunkSize - 1;	// minus one because byte range is inclusive
+					if (fileSize && end > fileSize) // Hack around a Chrome bug: http://stackoverflow.com/q/24745095/1048862
+						end = fileSize;
+					xhr.setRequestHeader("Range", "bytes="+start+"-"+end);
+				}
+				xhr.send();
+				if (IS_WORKER && xhr.status == 0)
+					chunkError();
+				else
+					start += config.chunkSize;
+			}
+
+			function chunkLoaded()
+			{
+				if (xhr.readyState != 4)
+					return;
+
+				if (xhr.status < 200 || xhr.status >= 400)
+				{
+					chunkError();
+					return;
+				}
+
+				// Rejoin the line we likely just split in two by chunking the file
+				aggregate += partialLine + xhr.responseText;
+				partialLine = "";
+
+				var finishedWithEntireFile = !config.step || start > getFileSize(xhr);
+
+				if (!finishedWithEntireFile)
+				{
+					var lastLineEnd = aggregate.lastIndexOf("\n");
+
+					if (lastLineEnd < 0)
+						lastLineEnd = aggregate.lastIndexOf("\r");
+
+					if (lastLineEnd > -1)
+					{
+						partialLine = aggregate.substring(lastLineEnd + 1);	// skip the line ending character
+						aggregate = aggregate.substring(0, lastLineEnd);
+					}
+					else
+					{
+						// For chunk sizes smaller than a line (a line could not fit in a single chunk)
+						// we simply build our aggregate by reading in the next chunk, until we find a newline
+						nextChunk();
+						return;
+					}
+				}
+
+				var results = handle.parse(aggregate);
+				aggregate = "";
+
+				if (IS_WORKER)
+				{
+					global.postMessage({
+						results: results,
+						workerId: Papa.WORKER_ID,
+						finished: finishedWithEntireFile
+					});
+				}
+				else if (isFunction(config.chunk))
+				{
+					config.chunk(results);
+					results = undefined;
+				}
+
+				if (!finishedWithEntireFile && !results.meta.paused)
+					nextChunk();
+			}
+
+			function chunkError()
+			{
+				if (isFunction(config.error))
+					config.error(xhr.statusText);
+				else if (IS_WORKER && config.error)
+				{
+					global.postMessage({
+						workerId: Papa.WORKER_ID,
+						error: xhr.statusText,
+						finished: false
+					});
+				}
+			}
+
+			function getFileSize(xhr)
+			{
+				var contentRange = xhr.getResponseHeader("Content-Range");
+				return parseInt(contentRange.substr(contentRange.lastIndexOf("/") + 1));
+			}
+		};
+	}
+
+
+
+
+
+
+
+
+
+	function FileStreamer(config)
+	{
+		config = config || {};
+		if (!config.chunkSize)
+			config.chunkSize = Papa.LocalChunkSize;
+
+		var start = 0;
+		var aggregate = "";
+		var partialLine = "";
+		var reader, nextChunk, slice;
+		var handle = new ParserHandle(copy(config));
+
+		// FileReader is better than FileReaderSync (even in worker) - see http://stackoverflow.com/q/24708649/1048862
+		// But Firefox is a pill, too - see issue #76: https://github.com/mholt/PapaParse/issues/76
+		var usingAsyncReader = typeof FileReader === 'function';
+
+		this.stream = function(file)
+		{
+			var slice = file.slice || file.webkitSlice || file.mozSlice;
+
+			if (usingAsyncReader)
+			{
+				reader = new FileReader();		// Preferred method of reading files, even in workers
+				reader.onload = chunkLoaded;
+				reader.onerror = chunkError;
+			}
+			else
+				reader = new FileReaderSync();	// Hack for running in a web worker in Firefox
+
+			nextChunk();	// Starts streaming
+
+			function nextChunk()
+			{
+				if (start < file.size)
+					readChunk();
+			}
+
+			function readChunk()
+			{
+				var end = Math.min(start + config.chunkSize, file.size);
+				var txt = reader.readAsText(slice.call(file, start, end), config.encoding);
+				if (!usingAsyncReader)
+					chunkLoaded({ target: { result: txt } });	// mimic the async signature
+			}
+
+			function chunkLoaded(event)
+			{
+				// Very important to increment start each time before handling results
+				start += config.chunkSize;
+
+				// Rejoin the line we likely just split in two by chunking the file
+				aggregate += partialLine + event.target.result;
+				partialLine = "";
+
+				var finishedWithEntireFile = start >= file.size;
+
+				if (!finishedWithEntireFile)
+				{
+					var lastLineEnd = aggregate.lastIndexOf("\n");
+
+					if (lastLineEnd < 0)
+						lastLineEnd = aggregate.lastIndexOf("\r");
+
+					if (lastLineEnd > -1)
+					{
+						partialLine = aggregate.substring(lastLineEnd + 1);	// skip the line ending character
+						aggregate = aggregate.substring(0, lastLineEnd);
+					}
+					else
+					{
+						// For chunk sizes smaller than a line (a line could not fit in a single chunk)
+						// we simply build our aggregate by reading in the next chunk, until we find a newline
+						nextChunk();
+						return;
+					}
+				}
+
+				var results = handle.parse(aggregate);
+				aggregate = "";
+
+				if (IS_WORKER)
+				{
+					global.postMessage({
+						results: results,
+						workerId: Papa.WORKER_ID,
+						finished: finishedWithEntireFile
+					});
+				}
+				else if (isFunction(config.chunk))
+				{
+					config.chunk(results, file);
+					results = undefined;
+				}
+
+				if (!finishedWithEntireFile && !results.meta.paused)
+					nextChunk();
+			}
+
+			function chunkError()
+			{
+				if (isFunction(config.error))
+					config.error(reader.error, file);
+				else if (IS_WORKER && config.error)
+				{
+					global.postMessage({
+						workerId: Papa.WORKER_ID,
+						error: reader.error,
+						file: file,
+						finished: false
+					});
+				}
+			}
+		};
+	}
+
+
+
+
+
+	// Use one ParserHandle per entire CSV file or string
+	function ParserHandle(_config)
+	{
+		// One goal is to minimize the use of regular expressions...
+		var FLOAT = /^\s*-?(\d*\.?\d+|\d+\.?\d*)(e[-+]?\d+)?\s*$/i;
+
+		var self = this;
+		var _input;				// The input being parsed
+		var _parser;			// The core parser being used
+		var _paused = false;	// Whether we are paused or not
+		var _delimiterError;	// Temporary state between delimiter detection and processing results
+		var _fields = [];		// Fields are from the header row of the input, if there is one
+		var _results = {		// The last results returned from the parser
+			data: [],
+			errors: [],
+			meta: {}
+		};
+		_config = copy(_config);
+
+		this.parse = function(input)
+		{
+			_delimiterError = false;
+			if (!_config.delimiter)
+			{
+				var delimGuess = guessDelimiter(input);
+				if (delimGuess.successful)
+					_config.delimiter = delimGuess.bestDelimiter;
+				else
+				{
+					_delimiterError = true;	// add error after parsing (otherwise it would be overwritten)
+					_config.delimiter = Papa.DefaultDelimiter;
+				}
+				_results.meta.delimiter = _config.delimiter;
+			}
+
+			if (isFunction(_config.step))
+			{
+				var userStep = _config.step;
+				_config.step = function(results)
+				{
+					_results = results;
+					if (needsHeaderRow())
+						processResults();
+					else
+						userStep(processResults(), self);
+				};
+			}
+
+			if (_config.preview && _config.header)
+				_config.preview++;	// to compensate for header row
+
+			_input = input;
+			_parser = new Parser(_config);
+			_results = _parser.parse(_input);
+			processResults();
+			if (isFunction(_config.complete) && !_paused)
+				_config.complete(_results);
+			return _paused ? { meta: { paused: true } } : _results;
+		};
+
+		this.pause = function()
+		{
+			_paused = true;
+			_parser.abort();
+			_input = _input.substr(_parser.getCharIndex());
+		};
+
+		this.resume = function()
+		{
+			_paused = false;
+			_parser = new Parser(_config);
+			_parser.parse(_input);
+			if (isFunction(_config.complete) && !_paused)
+				_config.complete(_results);
+		};
+
+		this.abort = function()
+		{
+			_parser.abort();
+			if (isFunction(_config.complete))
+				_config.complete(_results);
+			_input = "";
+		}
+
+		function processResults()
+		{
+			if (_results && _delimiterError)
+			{
+				addError("Delimiter", "UndetectableDelimiter", "Unable to auto-detect delimiting character; defaulted to '"+Papa.DefaultDelimiter+"'");
+				_delimiterError = false;
+			}
+
+			if (needsHeaderRow())
+				fillHeaderFields();
+
+			return applyHeaderAndDynamicTyping();
+		}
+
+		function needsHeaderRow()
+		{
+			return _config.header && _fields.length == 0;
+		}
+
+		function fillHeaderFields()
+		{
+			if (!_results)
+				return;
+			for (var i = 0; needsHeaderRow() && i < _results.data.length; i++)
+				for (var j = 0; j < _results.data[i].length; j++)
+					_fields.push(_results.data[i][j]);
+			_results.data.splice(0, 1);
+		}
+
+		function applyHeaderAndDynamicTyping()
+		{
+			if (!_results || (!_config.header && !_config.dynamicTyping))
+				return _results;
+
+			for (var i = 0; i < _results.data.length; i++)
+			{
+				var row = {};
+				for (var j = 0; j < _results.data[i].length; j++)
+				{
+					if (_config.dynamicTyping)
+					{
+						var value = _results.data[i][j];
+						if (value == "true")
+							_results.data[i][j] = true;
+						else if (value == "false")
+							_results.data[i][j] = false;
+						else
+							_results.data[i][j] = tryParseFloat(value);
+					}
+
+					if (_config.header)
+					{
+						if (j >= _fields.length)
+						{
+							if (!row["__parsed_extra"])
+								row["__parsed_extra"] = [];
+							row["__parsed_extra"].push(_results.data[i][j]);
+						}
+						else
+							row[_fields[j]] = _results.data[i][j];
+					}
+				}
+
+				if (_config.header)
+				{
+					_results.data[i] = row;
+					if (j > _fields.length)
+						addError("FieldMismatch", "TooManyFields", "Too many fields: expected " + _fields.length + " fields but parsed " + j, i);
+					else if (j < _fields.length)
+						addError("FieldMismatch", "TooFewFields", "Too few fields: expected " + _fields.length + " fields but parsed " + j, i);
+				}
+			}
+
+			if (_config.header && _results.meta)
+				_results.meta.fields = _fields;
+
+			return _results;
+		}
+
+		function guessDelimiter(input)
+		{
+			var delimChoices = [",", "\t", "|", ";", Papa.RECORD_SEP, Papa.UNIT_SEP];
+			var bestDelim, bestDelta, fieldCountPrevRow;
+
+			for (var i = 0; i < delimChoices.length; i++)
+			{
+				var delim = delimChoices[i];
+				var delta = 0, avgFieldCount = 0;
+				fieldCountPrevRow = undefined;
+
+				var preview = new Parser({
+					delimiter: delim,
+					preview: 10
+				}).parse(input);
+
+				for (var j = 0; j < preview.data.length; j++)
+				{
+					var fieldCount = preview.data[j].length;
+					avgFieldCount += fieldCount;
+
+					if (typeof fieldCountPrevRow === 'undefined')
+					{
+						fieldCountPrevRow = fieldCount;
+						continue;
+					}
+					else if (fieldCount > 1)
+					{
+						delta += Math.abs(fieldCount - fieldCountPrevRow);
+						fieldCountPrevRow = fieldCount;
+					}
+				}
+
+				avgFieldCount /= preview.data.length;
+
+				if ((typeof bestDelta === 'undefined' || delta < bestDelta)
+					&& avgFieldCount > 1.99)
+				{
+					bestDelta = delta;
+					bestDelim = delim;
+				}
+			}
+
+			_config.delimiter = bestDelim;
+
+			return {
+				successful: !!bestDelim,
+				bestDelimiter: bestDelim
+			}
+		}
+
+		function tryParseFloat(val)
+		{
+			var isNumber = FLOAT.test(val);
+			return isNumber ? parseFloat(val) : val;
+		}
+
+		function addError(type, code, msg, row)
+		{
+			_results.errors.push({
+				type: type,
+				code: code,
+				message: msg,
+				row: row
+			});
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+
+	function Parser(config)
+	{
+		var EMPTY = /^\s*$/;
+
+		var _input;		// The input text being parsed
+		var _delimiter;	// The delimiting character
+		var _comments;	// Comment character (default '#') or boolean
+		var _step;		// The step (streaming) function
+		var _callback;	// The callback to invoke when finished
+		var _preview;	// Maximum number of lines (not rows) to parse
+		var _ch;		// Current character
+		var _i;			// Current character's positional index
+		var _inQuotes;	// Whether in quotes or not
+		var _lineNum;	// Current line number (1-based indexing)
+		var _data;		// Parsed data (results)
+		var _errors;	// Parse errors
+		var _rowIdx;	// Current row index within results (0-based)
+		var _colIdx;	// Current col index within result row (0-based)
+		var _runningRowIdx;		// Cumulative row index, used by the preview feature
+		var _aborted = false;	// Abort flag
+
+		// Unpack the config object
+		config = config || {};
+		_delimiter = config.delimiter;
+		_comments = config.comments;
+		_step = config.step;
+		_preview = config.preview;
+
+		// Delimiter integrity check
+		if (typeof _delimiter !== 'string'
+			|| _delimiter.length != 1
+			|| Papa.BAD_DELIMITERS.indexOf(_delimiter) > -1)
+			_delimiter = ",";
+
+		// Comment character integrity check
+		if (_comments === true)
+			_comments = "#";
+		else if (typeof _comments !== 'string'
+			|| _comments.length != 1
+			|| Papa.BAD_DELIMITERS.indexOf(_comments) > -1
+			|| _comments == _delimiter)
+			_comments = false;
+
+
+		this.parse = function(input)
+		{
+			if (typeof input !== 'string')
+				throw "Input must be a string";
+			reset(input);
+			return parserLoop();
+		};
+
+		this.abort = function()
+		{
+			_aborted = true;
+		};
+
+		this.getCharIndex = function()
+		{
+			 return _i;
+		};
+
+		function parserLoop()
+		{
+			while (_i < _input.length)
+			{
+				if (_aborted) break;
+				if (_preview > 0 && _runningRowIdx >= _preview) break;
+
+				if (_ch == '"')
+					parseQuotes();
+				else if (_inQuotes)
+					parseInQuotes();
+				else
+					parseNotInQuotes();
+
+				nextChar();
+			}
+
+			return finishParsing();
+		}
+
+		function nextChar()
+		{
+			_i++;
+			_ch = _input[_i];
+		}
+
+		function finishParsing()
+		{
+			if (_aborted)
+				addError("Abort", "ParseAbort", "Parsing was aborted by the user's step function");
+			if (_inQuotes)
+				addError("Quotes", "MissingQuotes", "Unescaped or mismatched quotes");
+			endRow();	// End of input is also end of the last row
+			if (!isFunction(_step))
+				return returnable();
+		}
+
+		function parseQuotes()
+		{
+			if (quotesOnBoundary() && !quotesEscaped())
+				_inQuotes = !_inQuotes;
+			else
+			{
+				saveChar();
+				if (_inQuotes && quotesEscaped())
+					_i++
+				else
+					addError("Quotes", "UnexpectedQuotes", "Unexpected quotes");
+			}
+		}
+
+		function parseInQuotes()
+		{
+			if (twoCharLineBreak(_i) || oneCharLineBreak(_i))
+				_lineNum++;
+			saveChar();
+		}
+
+		function parseNotInQuotes()
+		{
+			if (_ch == _delimiter)
+				newField();
+			else if (twoCharLineBreak(_i))
+			{
+				newRow();
+				nextChar();
+			}
+			else if (oneCharLineBreak(_i))
+				newRow();
+			else if (isCommentStart())
+				skipLine();
+			else
+				saveChar();
+		}
+
+		function isCommentStart()
+		{
+			if (!_comments)
+				return false;
+
+			var firstCharOfLine = _i == 0
+									|| oneCharLineBreak(_i-1)
+									|| twoCharLineBreak(_i-2);
+			return firstCharOfLine && _input[_i] === _comments;
+		}
+
+		function skipLine()
+		{
+			while (!twoCharLineBreak(_i)
+				&& !oneCharLineBreak(_i)
+				&& _i < _input.length)
+			{
+				nextChar();
+			}
+		}
+
+		function saveChar()
+		{
+			_data[_rowIdx][_colIdx] += _ch;
+		}
+
+		function newField()
+		{
+			_data[_rowIdx].push("");
+			_colIdx = _data[_rowIdx].length - 1;
+		}
+
+		function newRow()
+		{
+			endRow();
+
+			_lineNum++;
+			_runningRowIdx++;
+			_data.push([]);
+			_rowIdx = _data.length - 1;
+			newField();
+		}
+
+		function endRow()
+		{
+			trimEmptyLastRow();
+			if (isFunction(_step))
+			{
+				if (_data[_rowIdx])
+					_step(returnable());
+				clearErrorsAndData();
+			}
+		}
+
+		function trimEmptyLastRow()
+		{
+			if (_data[_rowIdx].length == 1 && EMPTY.test(_data[_rowIdx][0]))
+			{
+				if (config.keepEmptyRows)
+					_data[_rowIdx].splice(0, 1);	// leave row, but no fields
+				else
+					_data.splice(_rowIdx, 1);		// cut out row entirely
+				_rowIdx = _data.length - 1;
+			}
+		}
+
+		function twoCharLineBreak(i)
+		{
+			return i < _input.length - 1 &&
+				((_input[i] == "\r" && _input[i+1] == "\n")
+				|| (_input[i] == "\n" && _input[i+1] == "\r"))
+		}
+
+		function oneCharLineBreak(i)
+		{
+			return _input[i] == "\r" || _input[i] == "\n";
+		}
+
+		function quotesEscaped()
+		{
+			// Quotes as data cannot be on boundary, for example: ,"", are not escaped quotes
+			return !quotesOnBoundary() && _i < _input.length - 1 && _input[_i+1] == '"';
+		}
+
+		function quotesOnBoundary()
+		{
+			return (!_inQuotes && isBoundary(_i-1)) || isBoundary(_i+1);
+		}
+
+		function isBoundary(i)
+		{
+			if (typeof i != 'number')
+				i = _i;
+
+			var ch = _input[i];
+
+			return (i <= -1 || i >= _input.length)
+				|| (ch == _delimiter
+					|| ch == "\r"
+					|| ch == "\n");
+		}
+
+		function addError(type, code, msg)
+		{
+			_errors.push({
+				type: type,
+				code: code,
+				message: msg,
+				line: _lineNum,
+				row: _rowIdx,
+				index: _i
+			});
+		}
+
+		function reset(input)
+		{
+			_input = input;
+			_inQuotes = false;
+			_i = 0, _runningRowIdx = 0, _lineNum = 1;
+			clearErrorsAndData();
+			_data = [ [""] ];	// starting parsing requires an empty field
+			_ch = _input[_i];
+		}
+
+		function clearErrorsAndData()
+		{
+			_data = [];
+			_errors = [];
+			_rowIdx = 0;
+			_colIdx = 0;
+		}
+
+		function returnable()
+		{
+			return {
+				data: _data,
+				errors: _errors,
+				meta: {
+					lines: _lineNum,
+					delimiter: _delimiter,
+					aborted: _aborted,
+					truncated: _preview > 0 && _i < _input.length
+				}
+			};
+		}
+	}
+
+
+
+	function getScriptPath()
+	{
+		var id = "worker" + String(Math.random()).substr(2);
+		document.write('<script id="'+id+'"></script>');
+		return document.getElementById(id).previousSibling.src;
+	}
+
+	function newWorker()
+	{
+		if (!Papa.WORKERS_SUPPORTED)
+			return false;
+		var w = new global.Worker(SCRIPT_PATH);
+		w.onmessage = mainThreadReceivedMessage;
+		w.id = workerIdCounter++;
+		workers[w.id] = w;
+		return w;
+	}
+
+	// Callback when main thread receives a message
+	function mainThreadReceivedMessage(e)
+	{
+		var msg = e.data;
+		var worker = workers[msg.workerId];
+
+		if (msg.error)
+			worker.userError(msg.error, msg.file);
+		else if (msg.results && msg.results.data)
+		{
+			if (isFunction(worker.userStep))
+			{
+				for (var i = 0; i < msg.results.data.length; i++)
+				{
+					worker.userStep({
+						data: [msg.results.data[i]],
+						errors: msg.results.errors,
+						meta: msg.results.meta
+					});
+				}
+				delete msg.results;	// free memory ASAP
+			}
+			else if (isFunction(worker.userChunk))
+			{
+				worker.userChunk(msg.results, msg.file);
+				delete msg.results;
+			}
+		}
+
+		if (msg.finished)
+		{
+			if (isFunction(workers[msg.workerId].userComplete))
+				workers[msg.workerId].userComplete(msg.results);
+			workers[msg.workerId].terminate();
+			delete workers[msg.workerId];
+		}
+	}
+
+	// Callback when worker thread receives a message
+	function workerThreadReceivedMessage(e)
+	{
+		var msg = e.data;
+
+		if (typeof Papa.WORKER_ID === 'undefined' && msg)
+			Papa.WORKER_ID = msg.workerId;
+
+		if (typeof msg.input === 'string')
+		{
+			global.postMessage({
+				workerId: Papa.WORKER_ID,
+				results: Papa.parse(msg.input, msg.config),
+				finished: true
+			});
+		}
+		else if (msg.input instanceof File)
+		{
+			var results = Papa.parse(msg.input, msg.config);
+			if (results)
+				global.postMessage({
+					workerId: Papa.WORKER_ID,
+					results: results,
+					finished: true
+				});
+		}
+	}
+
+	// Replaces bad config values with good, default ones
+	function copyAndValidateConfig(origConfig)
+	{
+		if (typeof origConfig !== 'object')
+			origConfig = {};
+
+		var config = copy(origConfig);
+
+		if (typeof config.delimiter !== 'string'
+			|| config.delimiter.length != 1
+			|| Papa.BAD_DELIMITERS.indexOf(config.delimiter) > -1)
+			config.delimiter = DEFAULTS.delimiter;
+
+		if (typeof config.header !== 'boolean')
+			config.header = DEFAULTS.header;
+
+		if (typeof config.dynamicTyping !== 'boolean')
+			config.dynamicTyping = DEFAULTS.dynamicTyping;
+
+		if (typeof config.preview !== 'number')
+			config.preview = DEFAULTS.preview;
+
+		if (typeof config.step !== 'function')
+			config.step = DEFAULTS.step;
+
+		if (typeof config.complete !== 'function')
+			config.complete = DEFAULTS.complete;
+
+		if (typeof config.error !== 'function')
+			config.error = DEFAULTS.error;
+
+		if (typeof config.encoding !== 'string')
+			config.encoding = DEFAULTS.encoding;
+
+		if (typeof config.worker !== 'boolean')
+			config.worker = DEFAULTS.worker;
+
+		if (typeof config.download !== 'boolean')
+			config.download = DEFAULTS.download;
+
+		if (typeof config.keepEmptyRows !== 'boolean')
+			config.keepEmptyRows = DEFAULTS.keepEmptyRows;
+
+		return config;
+	}
+
+	function copy(obj)
+	{
+		if (typeof obj !== 'object')
+			return obj;
+		var cpy = obj instanceof Array ? [] : {};
+		for (var key in obj)
+			cpy[key] = copy(obj[key]);
+		return cpy;
+	}
+
+	function isFunction(func)
+	{
+		return typeof func === 'function';
+	}
+})(this);

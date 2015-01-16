@@ -11,7 +11,7 @@ function createControls(){
 
 
 	$("#slider-minute-vertical").slider({
-		orientation: "vertical",
+		orientation: "horizontal",
 		range: "min",
 		min: 1,
 		max: 75,
@@ -28,7 +28,7 @@ function createControls(){
 
 
 	$( "#slider-hour-vertical" ).slider({
-		orientation: "vertical",
+		orientation: "horizontal",
 		range: "min",
 		min: 2,
 		max: 25.5,
@@ -90,13 +90,45 @@ function createControls(){
 			stops[stopName2id[ui.item.value]].circle.openPopup();
 		}
 	});
+	$("#startStation2").autocomplete({
+		source: tags, //Object.keys(stopName2id),
+		select: function( event, ui ) {
+			console.log(ui);
+			//affStopInfo(id);
+		},
+		/*	response: function( event, ui ) { // TO BE REMOVED
+			//if (ui.content.length<20) 
+			for (var k=0; k<ui.content.length; k++){
+				stops[stopName2id[ui.content[k].value]].circle.setStyle({fillColor: "#CC0099", fillOpacity:0.8});
+			}
+		},*/
+		focus: function( event, ui ){
+			stops[stopName2id[ui.item.value]].circle.openPopup();
+		}
+	});
+
+	$("#endStation").autocomplete({
+		source: tags, //Object.keys(stopName2id),
+		select: function( event, ui ) {
+			changeStartId(stopName2id[ui.item.value]);
+		},
+		/*	response: function( event, ui ) { // TO BE REMOVED
+			//if (ui.content.length<20) 
+			for (var k=0; k<ui.content.length; k++){
+				stops[stopName2id[ui.content[k].value]].circle.setStyle({fillColor: "#CC0099", fillOpacity:0.8});
+			}
+		},*/
+		focus: function( event, ui ){
+			stops[stopName2id[ui.item.value]].circle.openPopup();
+		}
+	});
 
 	if (debug_mode) console.log("Finished createControls!");
 }
 
 
 function initMapControls(){
-	highLightedPath = L.polyline([stops[1]], {clickable: false, color:"#7E1ED0", opacity:1}).addTo(network); //"#7E1ED0"
+	highLightedPath = L.polyline([stops[1]], {clickable: false, color:"#FFC800", opacity:1}).addTo(network); //"#7E1ED0"
 	transitionMarkers = [];
 
 	// stop controls:
@@ -135,8 +167,13 @@ function initMapControls(){
 	// route controls:
 	isActiveRoute = new Array(routes.length);
 	activeRouteSpans = new Array(routes.length);
+	
+	//PEDROLITO - ligne de bus dans l'ordre
+	//routes.sort(compareBus);
+	
 	for(var i=0; i<routes.length; i++){
-		var s = $("<span class=\"routeCheck\" id=\""+i+"\">"+routes[i].shortName+"</>").css({"background-color":activeRouteCheckColor}); 
+	// PEDROLITO - Toggle Route ajouté
+		var s = $("<span class=\"routeCheck\" id=\""+i+"\" onclick='toggleRouteActivity("+i+")'>"+routes[i].shortName+"</>").css({"background-color":activeRouteCheckColor}); 
 		s.click(function(){if (!basicMode)  toggleRouteActivity($(this).attr('id'));});
 		s.on('contextmenu', function(e) {e.preventDefault(); e.stopPropagation();affRouteInfo($(this).attr('id'));});
 		s.on('mouseover', function(e) {
@@ -153,11 +190,11 @@ function initMapControls(){
 				shapes[subRoutes[routes[routeId].subRoutes[i]].shapeId].polyline.fireEvent("mouseout");
 			}
 		});
-
 		$("#activeRoutes").append(s);
 		activeRouteSpans[i] = s;
 		isActiveRoute[i] = true;
 	}
+
 	startApp();
 }
 
@@ -185,7 +222,7 @@ function startApp(){
 	createSubShapes();
 	drawAccessible();
 	
-	animation=true;
+	animation = true;
 	toggleDayMovie();
 	
 	map.spin(false);
@@ -243,6 +280,7 @@ function changeStartHour(event, ui ){// affects global variable: startHour
 	$( "#startHour" ).val(real2hour(startHour)); 
 	if (debug_mode) console.log("startHour : "+startHour+"\n");
 	computeShortestPath();
+	drawAccessible();
 }
 
 
@@ -324,3 +362,18 @@ function changeAnimationVelocity(event, ui){
 	sleepDelay = 1000*Math.exp(-5/100*Number(ui.value));//$('#slider-animation-velocity').slider("value")));
 	if (debug_mode) console.log("sleepDelay : "+sleepDelay+"\n");
 }
+
+
+//PEDROLITO - Maj pour toggleactivity
+function cocher(){
+	var v = document.getElementsByName('list[]');
+	if(document.getElementById("cocher_tout").checked == true){
+		for (i=0;i<v.length;i++){document.getElementById("list"+i).checked = true;toggleAllActivity(true);}
+	}
+	else{
+		for (i=0;i<v.length;i++){document.getElementById("list"+i).checked = false;toggleAllActivity(false);}
+	}
+}
+
+	
+

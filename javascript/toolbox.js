@@ -111,3 +111,8 @@ function getDetailedStopSequence(dest){
 	}
 	else return([dest]);
 }
+
+//PEDROLITO - ligne de bus dans l'ordre
+function compareBus(a,b){
+	return a.shortName - b.shortName;
+}
